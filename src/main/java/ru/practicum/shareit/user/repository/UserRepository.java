@@ -5,13 +5,12 @@ import ru.practicum.shareit.user.model.User;
 import java.util.HashMap;
 import java.util.Map;
 
-//@Data
 @Repository
 public class UserRepository {
     final static Map<Integer, User> users = new HashMap<>();
     static Integer currentUserId = 0;
 
-    public static Integer RenewCurrentUserId() {
+    public static Integer renewCurrentUserId() {
         return ++currentUserId;
     }
 

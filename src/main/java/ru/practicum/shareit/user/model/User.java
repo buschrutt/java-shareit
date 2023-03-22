@@ -8,7 +8,6 @@ import lombok.experimental.PackagePrivate;
  */
 
 @Data
-// @Builder
 @PackagePrivate
 public class User {
     Integer id;
