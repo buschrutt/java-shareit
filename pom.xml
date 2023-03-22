@@ -8,17 +8,16 @@
 		<version>2.7.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>ru.yandex.practicum</groupId>
-	<artifactId>filmorate</artifactId>
+	<groupId>ru.practicum</groupId>
+	<artifactId>shareit</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>filmorate</name>
-	<description>An app for automated movie rating</description>
+	<name>shareit</name>
+	<description>Share it app</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
 
 	<dependencies>
-
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jdbc -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
