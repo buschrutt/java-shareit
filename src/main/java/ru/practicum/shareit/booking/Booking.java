@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 @PackagePrivate
 public class Booking {
     int id;
-    LocalDateTime bookingStart;
-    LocalDateTime bookingEnd;
-    int itemId;
-    int bookerId;
-    String bookingStatus; // WAITING — new booking, await for an approval; APPROVED — by owner
+    LocalDateTime start;
+    LocalDateTime end;
+    int item;
+    int booker;
+    String status; // WAITING — new booking, await for an approval; APPROVED — by owner
     // REJECTED — by owner; CANCELED — by requester;
 }
