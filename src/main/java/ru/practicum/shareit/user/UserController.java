@@ -6,7 +6,6 @@ import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import java.util.List;
@@ -19,37 +18,35 @@ import java.util.List;
 public class UserController {
 
     final private UserServiceImpl userService;
-    final private UserRepository userRepository;
     final private String epUserId = "/{userId}";
 
-    public UserController(UserServiceImpl userService, UserRepository userRepository) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     @PostMapping
     public UserDto addUser(@RequestBody User user) throws ValidationException, ConflictException {
-        return userService.addUser(user, userRepository);
+        return userService.addUser(user);
     }
 
     @PatchMapping(epUserId)
-    public UserDto updateUser(@PathVariable int userId, @RequestBody User user) throws ValidationException, ConflictException {
-        return userService.updateUser(userId, user, userRepository);
+    public UserDto updateUser(@PathVariable int userId, @RequestBody User user) throws ValidationException, ConflictException, NotFoundException {
+        return userService.updateUser(userId, user);
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers(userRepository);
+    public List<UserDto> findAllUsers() {
+        return userService.findAllUsers();
     }
 
     @GetMapping(epUserId)
-    public UserDto getUserById(@PathVariable int userId) throws NotFoundException {
-        return userService.getUserById(userId, userRepository);
+    public UserDto findUserById(@PathVariable int userId) throws NotFoundException {
+        return userService.findUserById(userId);
     }
 
     @DeleteMapping(epUserId)
-    public void deleteUser(@PathVariable int userId) {
-        userService.deleteUser(userId, userRepository);
+    public void deleteUser(@PathVariable int userId) throws NotFoundException {
+        userService.deleteUser(userId);
     }
 
 }

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.error.ConflictException;
 import ru.practicum.shareit.error.NotFoundException;
@@ -9,66 +10,70 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserDtoMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
+
     @Override
-    public UserDto addUser(User user, UserRepository userRepository) throws ValidationException, ConflictException {
+    public UserDto addUser(User user) throws ValidationException {
         emailValidation(user.getEmail());
-        int currentId = UserRepository.renewCurrentUserId();
-        user.setId(currentId);
-        UserRepository.getUsers().put(currentId, user);
-        return UserDtoMapper.toUserDto(UserRepository.getUsers().get(currentId));
+        return UserDtoMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
-    public UserDto updateUser(int userId, User user, UserRepository userRepository) throws ValidationException, ConflictException {
-        if (user.getEmail() != null && !Objects.equals(user.getEmail(), UserRepository.getUsers().get(userId).getEmail())){
+    public UserDto updateUser(int userId, User user) throws ValidationException, NotFoundException {
+        User newUser;
+        if (userRepository.findById(userId).isPresent()) {
+            newUser = userRepository.findById(userId).get();
+        } else {
+            throw new NotFoundException("getUserById: No User Found--");
+        }
+        if (user.getEmail() != null && !Objects.equals(user.getEmail(), newUser.getEmail())){
             emailValidation(user.getEmail());
-            UserRepository.getUsers().get(userId).setEmail(user.getEmail());
+            newUser.setEmail(user.getEmail());
         }
         if (user.getName() != null){
-            UserRepository.getUsers().get(userId).setName(user.getName());
+            newUser.setName(user.getName());
         }
-        return UserDtoMapper.toUserDto(UserRepository.getUsers().get(userId));
+        return UserDtoMapper.toUserDto(userRepository.save(newUser));
     }
 
     @Override
-    public List<UserDto> getAllUsers(UserRepository userRepository) {
+    public List<UserDto> findAllUsers() {
         List<UserDto> UserDtoList = new ArrayList<>();
-        for (Map.Entry<Integer, User> entry : UserRepository.getUsers().entrySet()){
-            UserDtoList.add(UserDtoMapper.toUserDto(entry.getValue()));
+        List<User> users = userRepository.findAll();
+        for (User user : users){
+            UserDtoList.add(UserDtoMapper.toUserDto(user));
         }
         return UserDtoList;
     }
 
     @Override
-    public UserDto getUserById(int userId, UserRepository userRepository) throws NotFoundException {
-        if (!UserRepository.getUsers().containsKey(userId)){
+    public UserDto findUserById(int userId) throws NotFoundException {
+        if (userRepository.findById(userId).isPresent()) {
+            return UserDtoMapper.toUserDto(userRepository.findById(userId).get());
+        } else {
             throw new NotFoundException("getUserById: No User Found--");
         }
-        return UserDtoMapper.toUserDto(UserRepository.getUsers().get(userId));
     }
 
     @Override
-    public void deleteUser(int userId, UserRepository userRepository) {
-        UserRepository.getUsers().remove(userId);
+    public void deleteUser(Integer userId) throws NotFoundException {
+        if (userRepository.findById(userId).isPresent()) {
+            userRepository.delete(userRepository.findById(userId).get());
+        } else {
+            throw new NotFoundException("getUserById: No User Found--");
+        }
     }
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
 
-    private void emailValidation(String email) throws ValidationException, ConflictException {
+    private void emailValidation(String email) throws ValidationException {
         if (email == null) {
             throw new ValidationException("userValidation: Email Is Empty--");
-        }
-        for (Map.Entry<Integer, User> entry : UserRepository.getUsers().entrySet()) {
-            if (Objects.equals(entry.getValue().getEmail(), email)){
-                throw new ConflictException("userValidation: Email Is Not Uniq--");
-            }
         }
         String ePattern = "^[a-zA-Z\\d.!#$%&'*+/=?^_`{|}~-]+@((\\[\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}])|(([a-zA-Z\\-\\d]+\\.)+[a-zA-Z]{2,}))$";
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
