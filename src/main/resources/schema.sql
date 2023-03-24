@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS bookings (
                                         end_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
                                         item_id INTEGER REFERENCES items(id) ON DELETE CASCADE,
                                         booker_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-                                        status VARCHAR(40) NOT NULL
+                                        status VARCHAR NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS comments (
