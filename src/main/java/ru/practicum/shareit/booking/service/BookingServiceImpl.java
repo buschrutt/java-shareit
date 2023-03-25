@@ -149,6 +149,8 @@ public class BookingServiceImpl implements BookingService{
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
 
+
+
     private void requestValidation(BookingRequestDto request, Integer userId) throws ValidationException, NotFoundException {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("requestValidation: No User Found--");

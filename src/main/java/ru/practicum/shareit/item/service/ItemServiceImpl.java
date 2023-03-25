@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -19,6 +21,7 @@ import java.util.Objects;
 public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     public ItemDto addItem(Item item, Integer ownerId) throws ValidationException, NotFoundException {
@@ -64,8 +67,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItemById(Integer itemId) throws NotFoundException {
+        List<Booking> itemBookings = bookingRepository.itemBookings(itemId);
         if (itemRepository.findById(itemId).isPresent()) {
-            return ItemDtoMapper.toItemDto(itemRepository.findById(itemId).get());
+            return ItemDtoMapper.toItemWithBookingsDto(itemRepository.findById(itemId).get(), itemBookings);
         } else {
             throw new NotFoundException("getItemById: No Item Found--");
         }

@@ -18,4 +18,9 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             nativeQuery = true)
     List<Booking> ownerBookingsSorted(Integer owner_id);
 
+    @Query(
+            value = "SELECT * FROM bookings WHERE bookings.status = 'APPROVED' ORDER BY bookings.start_date DESC",
+            nativeQuery = true)
+    List<Booking> itemBookings(Integer item_id);
+
 }
