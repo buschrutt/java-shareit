@@ -69,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
                 itemBookings = bookingRepository.itemBookings(item.getId());
             }
             List<Comment> comments = commentRepository.itemComments(item.getId());
-            ItemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentsDto(item, itemBookings, comments, userRepository));
+            ItemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentsDto(item, itemBookings, comments, userRepository, itemRepository));
         }
         return ItemDtoList;
     }
@@ -84,7 +84,7 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         if (itemRepository.findById(itemId).isPresent()) {
-            return ItemDtoMapper.toItemWithBookingsAndCommentsDto(itemRepository.findById(itemId).get(), itemBookings, comments, userRepository);
+            return ItemDtoMapper.toItemWithBookingsAndCommentsDto(itemRepository.findById(itemId).get(), itemBookings, comments, userRepository, itemRepository);
         } else {
             throw new NotFoundException("getItemById: No Item Found--");
         }

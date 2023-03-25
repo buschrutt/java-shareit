@@ -8,17 +8,18 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Data
 @Builder
 @PackagePrivate
-public class BookingDto {
+public class LastNextBookingDto {
+
     Integer id;
     LocalDateTime start;
     LocalDateTime end;
     Item item;
-    User booker;
+    Integer bookerId;
     String status;
+
 }
+
+

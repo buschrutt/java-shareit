@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.dto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.PackagePrivate;
+import ru.practicum.shareit.booking.dto.LastNextBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Comment;
 
@@ -23,7 +24,7 @@ public class ItemDto {
     boolean isAvailable;
     int ownerId;
     String requestLink; // if was created by user request - holds the link to that request
-    Booking lastBooking;
-    Booking nextBooking;
+    LastNextBookingDto lastBooking;
+    LastNextBookingDto nextBooking;
     List<CommentDto> comments;
 }
