@@ -31,7 +31,7 @@ public class ItemDtoMapper {
     }
 
     private static Booking findLastBooking(List<Booking> itemBookings) {
-        /*Booking lastBooking = null;
+        Booking lastBooking = null;
         for (Booking booking : itemBookings) {
             if (booking.getStart().isBefore(LocalDateTime.now())) {
                 if (lastBooking == null) {
@@ -40,20 +40,22 @@ public class ItemDtoMapper {
                     lastBooking = booking;
                 }
             }
-        }*/
-        return null;
+        }
+        return lastBooking;
     }
 
     private static Booking findNextBooking(List<Booking> itemBookings) {
-        /*Booking nextBooking = null;
+        Booking nextBooking = null;
         for (Booking booking : itemBookings) {
-            if (booking.getStart().isAfter(LocalDateTime.now()) || booking.getStart().isBefore(nextBooking.getStart())) {
+            if (booking.getStart().isAfter(LocalDateTime.now())) {
                 if (nextBooking == null) {
+                    nextBooking = booking;
+                } else if (booking.getStart().isBefore(nextBooking.getStart())) {
                     nextBooking = booking;
                 }
             }
-        }*/
-        return null;
+        }
+        return nextBooking;
     }
 
 }

@@ -3,7 +3,9 @@ package ru.practicum.shareit.item;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
@@ -41,13 +43,18 @@ public class ItemController {
     }
 
     @GetMapping(epItemId)
-    public ItemDto getItemById(@PathVariable Integer itemId) throws NotFoundException {
-        return itemService.getItemById(itemId);
+    public ItemDto getItemById(@RequestHeader(value = sharerId) Integer ownerId, @PathVariable Integer itemId) throws NotFoundException {
+        return itemService.getItemById(itemId, ownerId);
     }
 
     @GetMapping("/search")
     public List<ItemDto> getItemsSearched(@RequestParam String text) {
         return itemService.getItemsSearched(text);
+    }
+
+    @PostMapping(epItemId + "/comment")
+    public CommentDto addComment(@RequestHeader(value = sharerId) Integer userId, @RequestBody Comment comment, @PathVariable Integer itemId) {
+        return itemService.addComment(comment, userId, itemId);
     }
 
 }

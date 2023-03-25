@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    Integer id;
 
     @Column(name = "text")
     String text;
 
     @Column(name = "item_id")
-    int item;
+    Integer item;
 
     @Column(name = "author_id")
     String author;

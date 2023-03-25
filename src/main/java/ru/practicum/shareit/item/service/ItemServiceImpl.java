@@ -6,12 +6,17 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentDtoMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoMapper;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +27,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public ItemDto addItem(Item item, Integer ownerId) throws ValidationException, NotFoundException {
@@ -58,16 +64,25 @@ public class ItemServiceImpl implements ItemService {
         List<ItemDto> ItemDtoList = new ArrayList<>();
         List<Item> items = itemRepository.findAll();
         for (Item item : items){
+            List<Booking> itemBookings = new ArrayList<>();
+            if (Objects.equals(itemRepository.findById(item.getId()).get().getOwnerId(), ownerId)) {
+                itemBookings = bookingRepository.itemBookings(item.getId());
+            }
             if (Objects.equals(item.getOwnerId(), ownerId)) {
-                ItemDtoList.add(ItemDtoMapper.toItemDto(item));
+                ItemDtoList.add(ItemDtoMapper.toItemWithBookingsDto(item, itemBookings));
             }
         }
         return ItemDtoList;
     }
 
     @Override
-    public ItemDto getItemById(Integer itemId) throws NotFoundException {
-        List<Booking> itemBookings = bookingRepository.itemBookings(itemId);
+    public ItemDto getItemById(Integer itemId, Integer ownerId) throws NotFoundException {
+        List<Booking> itemBookings = new ArrayList<>();
+        if (itemRepository.findById(itemId).isPresent()) {
+            if (Objects.equals(itemRepository.findById(itemId).get().getOwnerId(), ownerId)) {
+                itemBookings = bookingRepository.itemBookings(itemId);
+            }
+        }
         if (itemRepository.findById(itemId).isPresent()) {
             return ItemDtoMapper.toItemWithBookingsDto(itemRepository.findById(itemId).get(), itemBookings);
         } else {
@@ -88,6 +103,14 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         return ItemDtoList;
+    }
+
+    @Override
+    public CommentDto addComment(Comment comment, Integer userId, Integer itemId) {
+        comment.setAuthor(userRepository.findById(userId).get().getName());
+        comment.setItem(itemId);
+        comment.setCreated(LocalDateTime.now());
+        return CommentDtoMapper.toCommentDto(commentRepository.save(comment));
     }
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
