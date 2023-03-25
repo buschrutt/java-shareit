@@ -40,14 +40,15 @@ public class BookingServiceImpl implements BookingService{
     public BookingDto BookingApproval(Integer userId, Integer bookingId, Boolean isApproved) throws NotFoundException, ValidationException {
         Booking booking;
         if (bookingRepository.findById(bookingId).isPresent()) {
+            if (!Objects.equals(itemRepository.findById(bookingRepository.findById(bookingId).get().getItemId()).get().getOwnerId(), userId)) {
+                throw new NotFoundException("BookingApproval: --NotFoundException--");
+            }
             booking = bookingRepository.findById(bookingId).get();
-            /// ???
-            //if (isApproved && Objects.equals(booking.getStatus(), "APPROVED")) {
-                //throw new ValidationException("findBookingById: ValidationException--");
-            //}
-            /// ???
         } else {
-            throw new NotFoundException("BookingApproval: No Booking Found--");
+            throw new NotFoundException("BookingApproval: --NotFoundException--");
+        }
+        if (Objects.equals(booking.getStatus(), "APPROVED")) {
+            throw new ValidationException("BookingApproval: --ValidationException--");
         }
         if (isApproved) {
             booking.setStatus("APPROVED");
@@ -60,15 +61,15 @@ public class BookingServiceImpl implements BookingService{
     }
 
     @Override
-    public BookingDto findBookingById(Integer userId, Integer bookingId) throws NotFoundException, ValidationException {
+    public BookingDto findBookingById(Integer userId, Integer bookingId) throws NotFoundException {
         Booking booking;
         if (bookingRepository.findById(bookingId).isPresent()) {
             booking = bookingRepository.findById(bookingId).get();
         } else {
-            throw new NotFoundException("findBookingById: No Booking Found--");
+            throw new NotFoundException("findBookingById: --NotFoundException--");
         }
         if (!Objects.equals(booking.getBooker(), userId) && !Objects.equals(itemRepository.findById(booking.getItemId()).get().getOwnerId(), userId)) {
-            throw new NotFoundException("findBookingById: User isn't authorized--");
+            throw new NotFoundException("findBookingById: --NotFoundException--");
         }
         return BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
     }
@@ -76,7 +77,7 @@ public class BookingServiceImpl implements BookingService{
     @Override
     public List<BookingDto> findAllUserBookings(Integer userId, String state, Integer from, Integer size) throws NotFoundException, ValidationException {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("findAllUserBookings: No User Found--");
+            throw new NotFoundException("findAllUserBookings: --NotFoundException--");
         }
         List<BookingDto> bookingDtoList = new ArrayList<>();
         for (Booking booking : bookingRepository.userBookingsSorted(userId)) {
