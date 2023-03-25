@@ -12,17 +12,17 @@ public class ErrorHandler {
 
     @ExceptionHandler
     public ResponseEntity<Map<String, String>> handleValidationException(final ValidationException e) {
-        return new ResponseEntity<>(Map.of("error:", e.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<Map<String, String>> handleConflictException(final ConflictException e) {
-        return new ResponseEntity<>(Map.of("error:", e.getMessage()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler
     public ResponseEntity<Map<String, String>> handleNotFoundException(final NotFoundException e) {
-        return new ResponseEntity<>(Map.of("error:", e.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.NOT_FOUND);
     }
 
 }

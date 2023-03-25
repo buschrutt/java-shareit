@@ -12,12 +12,12 @@ public interface BookingService {
 
     BookingDto addBooking(BookingRequestDto request, Integer userId) throws ValidationException, NotFoundException;
 
-    BookingDto BookingApproval(Integer userId, Integer bookingId, Boolean isApproved);
+    BookingDto BookingApproval(Integer userId, Integer bookingId, Boolean isApproved) throws NotFoundException;
 
-    BookingDto findBookingById(Integer userId, Integer bookingId);
+    BookingDto findBookingById(Integer userId, Integer bookingId) throws NotFoundException, ValidationException;
 
-    List<BookingDto> findAllUserBookings(Integer userId, String state, Integer from, Integer size);
+    List<BookingDto> findAllUserBookings(Integer userId, String state, Integer from, Integer size) throws NotFoundException, ValidationException;
 
-    List<BookingDto> findAllUserItemBookings(Integer userId, String state, Integer from, Integer size);
+    List<BookingDto> findAllOwnerBookings(Integer userId, String state, Integer from, Integer size) throws NotFoundException, ValidationException;
 
 }

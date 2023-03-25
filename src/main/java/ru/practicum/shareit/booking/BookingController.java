@@ -18,7 +18,7 @@ import java.util.List;
 public class BookingController {
 
     final BookingService bookingService;
-    final String pathBookingId = "/{bookingId}";
+    final String epBookingId = "/{bookingId}";
 
     final private String sharerId = "X-Sharer-User-Id";
 
@@ -32,24 +32,24 @@ public class BookingController {
         return bookingService.addBooking(request, userId);
     }
 
-    @PatchMapping(pathBookingId)
-    public BookingDto BookingApproval(@RequestHeader(value = sharerId, required = false) Integer userId, @PathVariable Integer bookingId, @RequestParam boolean isApproved) {
-        return bookingService.BookingApproval(userId, bookingId, isApproved);
+    @PatchMapping(epBookingId)
+    public BookingDto BookingApproval(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer bookingId, @RequestParam boolean approved) throws NotFoundException {
+        return bookingService.BookingApproval(userId, bookingId, approved);
     }
 
-    @GetMapping(pathBookingId)
-    public BookingDto findBookingById(@RequestHeader(value = sharerId, required = false) Integer userId, @PathVariable int bookingId) {
+    @GetMapping(epBookingId)
+    public BookingDto findBookingById(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer bookingId) throws ValidationException, NotFoundException {
         return bookingService.findBookingById(userId, bookingId);
     }
 
     @GetMapping
-    public List<BookingDto> findAllUserBookings(@RequestHeader(value = sharerId, required = false) Integer userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) {
+    public List<BookingDto> findAllUserBookings(@RequestHeader(value = sharerId, required = false) Integer userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) throws NotFoundException, ValidationException {
         return bookingService.findAllUserBookings(userId, state, from, size);
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> findAllUserItemBookings(@RequestHeader(value = sharerId, required = false) Integer userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) {
-        return bookingService.findAllUserItemBookings(userId, state, from, size);
+    public List<BookingDto> findAllOwnerBookings(@RequestHeader(value = sharerId, required = false) Integer userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) throws NotFoundException, ValidationException {
+        return bookingService.findAllOwnerBookings(userId, state, from, size);
     }
 
 }

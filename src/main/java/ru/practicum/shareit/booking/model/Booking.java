@@ -28,10 +28,10 @@ public class Booking {
     LocalDateTime end;
 
     @Column(name = "item_id")
-    int itemId;
+    Integer itemId;
 
     @Column(name = "booker_id")
-    int booker;
+    Integer booker;
 
     @Column(name = "status")
     String status; // WAITING — new booking, await for an approval; APPROVED — by owner

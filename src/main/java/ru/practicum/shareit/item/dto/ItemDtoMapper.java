@@ -9,8 +9,6 @@ public class ItemDtoMapper {
                         .name(item.getName())
                         .description(item.getDescription())
                         .isAvailable(item.getAvailable())
-                        //.ownerId(item.getOwnerId())
-                        //.requestLink(item.getRequestLink())
                         .build();
     }
 }
