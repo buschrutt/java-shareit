@@ -81,31 +81,7 @@ public class BookingServiceImpl implements BookingService{
         }
         List<BookingDto> bookingDtoList = new ArrayList<>();
         for (Booking booking : bookingRepository.userBookingsSorted(userId)) {
-            if (Objects.equals(state, "ALL")) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-            } else if (Objects.equals(state, "CURRENT")) {
-                if (booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else if (Objects.equals(state, "PAST")) {
-                if (Objects.equals(booking.getStatus(), "APPROVED") && booking.getEnd().isBefore(LocalDateTime.now())) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else if (Objects.equals(state, "FUTURE")) {
-                if ((Objects.equals(booking.getStatus(), "APPROVED") || Objects.equals(booking.getStatus(), "WAITING")) && booking.getStart().isAfter(LocalDateTime.now())) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else if (Objects.equals(state, "WAITING")) {
-                if (Objects.equals(booking.getStatus(), "WAITING")) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else if (Objects.equals(state, "REJECTED")) {
-                if (Objects.equals(booking.getStatus(), "REJECTED")) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else {
-                throw new ValidationException("Unknown state: " + state);
-            }
+            bookingDtoAdding(state, bookingDtoList, booking);
         }
         return bookingDtoList;
     }
@@ -117,35 +93,37 @@ public class BookingServiceImpl implements BookingService{
         }
         List<BookingDto> bookingDtoList = new ArrayList<>();
         for (Booking booking : bookingRepository.ownerBookingsSorted(ownerId)) {
-            if (Objects.equals(state, "ALL")) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-            } else if (Objects.equals(state, "CURRENT")) {
-                if (booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else if (Objects.equals(state, "PAST")) {
-                if (Objects.equals(booking.getStatus(), "APPROVED") && booking.getEnd().isBefore(LocalDateTime.now())) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else if (Objects.equals(state, "FUTURE")) {
-                if ((Objects.equals(booking.getStatus(), "APPROVED") || Objects.equals(booking.getStatus(), "WAITING")) && booking.getStart().isAfter(LocalDateTime.now())) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else if (Objects.equals(state, "WAITING")) {
-                if (Objects.equals(booking.getStatus(), "WAITING")) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else if (Objects.equals(state, "REJECTED")) {
-                if (Objects.equals(booking.getStatus(), "REJECTED")) {
-                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
-                }
-            } else {
-                throw new ValidationException("Unknown state: " + state);
-            }
+            bookingDtoAdding(state, bookingDtoList, booking);
         }
-
-
         return bookingDtoList;
+    }
+
+    private void bookingDtoAdding(String state, List<BookingDto> bookingDtoList, Booking booking) throws ValidationException {
+        if (Objects.equals(state, "ALL")) {
+            bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+        } else if (Objects.equals(state, "CURRENT")) {
+            if (booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+            }
+        } else if (Objects.equals(state, "PAST")) {
+            if (Objects.equals(booking.getStatus(), "APPROVED") && booking.getEnd().isBefore(LocalDateTime.now())) {
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+            }
+        } else if (Objects.equals(state, "FUTURE")) {
+            if ((Objects.equals(booking.getStatus(), "APPROVED") || Objects.equals(booking.getStatus(), "WAITING")) && booking.getStart().isAfter(LocalDateTime.now())) {
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+            }
+        } else if (Objects.equals(state, "WAITING")) {
+            if (Objects.equals(booking.getStatus(), "WAITING")) {
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+            }
+        } else if (Objects.equals(state, "REJECTED")) {
+            if (Objects.equals(booking.getStatus(), "REJECTED")) {
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+            }
+        } else {
+            throw new ValidationException("Unknown state: " + state);
+        }
     }
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%

@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.error.ConflictException;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -25,12 +24,12 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto addUser(@RequestBody User user) throws ValidationException, ConflictException {
+    public UserDto addUser(@RequestBody User user) throws ValidationException {
         return userService.addUser(user);
     }
 
     @PatchMapping(epUserId)
-    public UserDto updateUser(@PathVariable int userId, @RequestBody User user) throws ValidationException, ConflictException, NotFoundException {
+    public UserDto updateUser(@PathVariable int userId, @RequestBody User user) throws ValidationException, NotFoundException {
         return userService.updateUser(userId, user);
     }
 
