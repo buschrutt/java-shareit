@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoMapper;
@@ -19,6 +20,7 @@ import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class BookingServiceImpl implements BookingService{
 
     private final BookingRepository bookingRepository;
@@ -30,14 +32,20 @@ public class BookingServiceImpl implements BookingService{
         requestValidation(request, userId);
         Booking booking = BookingDtoMapper.addBookingToBooking(request, userId);
         bookingRepository.save(booking);
+        log.info("Booking crated, ID: {}", booking.getId());
         return BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
     }
 
     @Override
-    public BookingDto BookingApproval(Integer userId, Integer bookingId, Boolean isApproved) throws NotFoundException {
+    public BookingDto BookingApproval(Integer userId, Integer bookingId, Boolean isApproved) throws NotFoundException, ValidationException {
         Booking booking;
         if (bookingRepository.findById(bookingId).isPresent()) {
             booking = bookingRepository.findById(bookingId).get();
+            /// ???
+            //if (isApproved && Objects.equals(booking.getStatus(), "APPROVED")) {
+                //throw new ValidationException("findBookingById: ValidationException--");
+            //}
+            /// ???
         } else {
             throw new NotFoundException("BookingApproval: No Booking Found--");
         }
@@ -148,6 +156,9 @@ public class BookingServiceImpl implements BookingService{
         if (itemRepository.findById(request.getItemId()).isPresent()) {
             if(!itemRepository.findById(request.getItemId()).get().getAvailable()) {
                 throw new ValidationException("requestValidation: Item isn't available--");
+            }
+            if (Objects.equals(itemRepository.findById(request.getItemId()).get().getOwnerId(), userId)) {
+                throw new NotFoundException("requestValidation: NotFoundException--");
             }
         } else {
             throw new NotFoundException("requestValidation: No Item Found--");

@@ -33,7 +33,7 @@ public class BookingController {
     }
 
     @PatchMapping(epBookingId)
-    public BookingDto BookingApproval(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer bookingId, @RequestParam boolean approved) throws NotFoundException {
+    public BookingDto BookingApproval(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer bookingId, @RequestParam Boolean approved) throws NotFoundException, ValidationException {
         return bookingService.BookingApproval(userId, bookingId, approved);
     }
 
