@@ -53,7 +53,7 @@ public class ItemController {
     }
 
     @PostMapping(epItemId + "/comment")
-    public CommentDto addComment(@RequestHeader(value = sharerId) Integer userId, @RequestBody Comment comment, @PathVariable Integer itemId) {
+    public CommentDto addComment(@RequestHeader(value = sharerId) Integer userId, @RequestBody Comment comment, @PathVariable Integer itemId) throws ValidationException {
         return itemService.addComment(comment, userId, itemId);
     }
 

@@ -13,6 +13,6 @@ public class CommentDto {
     Integer id;
     String text;
     Integer item;
-    String author;
+    String authorName;
     LocalDateTime created;
 }

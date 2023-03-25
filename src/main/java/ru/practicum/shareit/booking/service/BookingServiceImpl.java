@@ -83,7 +83,7 @@ public class BookingServiceImpl implements BookingService{
             if (Objects.equals(state, "ALL")) {
                 bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
             } else if (Objects.equals(state, "CURRENT")) {
-                if (Objects.equals(booking.getStatus(), "APPROVED") && booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
+                if (booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
                     bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
                 }
             } else if (Objects.equals(state, "PAST")) {
@@ -119,7 +119,7 @@ public class BookingServiceImpl implements BookingService{
             if (Objects.equals(state, "ALL")) {
                 bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
             } else if (Objects.equals(state, "CURRENT")) {
-                if (Objects.equals(booking.getStatus(), "APPROVED") && booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
+                if (booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
                     bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
                 }
             } else if (Objects.equals(state, "PAST")) {

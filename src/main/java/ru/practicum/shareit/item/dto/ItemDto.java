@@ -4,6 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.PackagePrivate;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.item.model.Comment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -21,4 +25,5 @@ public class ItemDto {
     String requestLink; // if was created by user request - holds the link to that request
     Booking lastBooking;
     Booking nextBooking;
+    List<CommentDto> comments;
 }

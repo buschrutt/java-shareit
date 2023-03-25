@@ -106,11 +106,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentDto addComment(Comment comment, Integer userId, Integer itemId) {
-        comment.setAuthor(userRepository.findById(userId).get().getName());
+    public CommentDto addComment(Comment comment, Integer userId, Integer itemId) throws ValidationException {
+        commentValidation (comment, userId, itemId);
+        comment.setAuthorName(userId);
         comment.setItem(itemId);
         comment.setCreated(LocalDateTime.now());
-        return CommentDtoMapper.toCommentDto(commentRepository.save(comment));
+        return CommentDtoMapper.toCommentDto(commentRepository.save(comment), userRepository);
     }
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
@@ -123,4 +124,18 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException("getUserById: No User Found--");
         }
     }
+
+    void commentValidation (Comment comment, Integer userId, Integer itemId) throws ValidationException {
+        if (comment.getText().isEmpty()) {
+            throw new ValidationException("commentValidation: text is Empty--");
+        }
+        List<Booking> endBookingTimes = bookingRepository.userItemBookings(userId, itemId);
+        for (Booking booking : endBookingTimes) {
+            if (booking.getEnd().isBefore(LocalDateTime.now())) {
+                return;
+            }
+        }
+        throw new ValidationException("commentValidation: no Completed Booking Found--");
+    }
+
 }

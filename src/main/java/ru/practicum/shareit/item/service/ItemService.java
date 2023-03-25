@@ -25,6 +25,6 @@ public interface ItemService {
 
     List<ItemDto> getItemsSearched(String text);
 
-    CommentDto addComment(Comment comment, Integer userId, Integer itemId);
+    CommentDto addComment(Comment comment, Integer userId, Integer itemId) throws ValidationException;
 
 }

@@ -26,7 +26,7 @@ public class Comment {
     Integer item;
 
     @Column(name = "author_id")
-    String author;
+    Integer authorName;
 
     @Column(name = "created")
     LocalDateTime created;

@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.booking.model.Booking;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
@@ -22,5 +23,10 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             value = "SELECT * FROM bookings WHERE bookings.status = 'APPROVED' ORDER BY bookings.start_date DESC",
             nativeQuery = true)
     List<Booking> itemBookings(Integer item_id);
+
+    @Query(
+            value = "SELECT * FROM bookings WHERE bookings.status = 'APPROVED' AND booker_id = ? AND item_id = ? ORDER BY bookings.start_date DESC",
+            nativeQuery = true)
+    List<Booking> userItemBookings(Integer userId, Integer itemId);
 
 }
