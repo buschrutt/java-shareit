@@ -62,16 +62,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAllUserItems(Integer ownerId) {
         List<ItemDto> ItemDtoList = new ArrayList<>();
-        List<Item> items = itemRepository.findAll();
+        List<Item> items = itemRepository.ownerItems(ownerId);
         for (Item item : items){
             List<Booking> itemBookings = new ArrayList<>();
             if (Objects.equals(itemRepository.findById(item.getId()).get().getOwnerId(), ownerId)) {
                 itemBookings = bookingRepository.itemBookings(item.getId());
             }
-            if (Objects.equals(item.getOwnerId(), ownerId)) {
-                List<Comment> comments = commentRepository.itemComments(item.getId());
-                ItemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentsDto(item, itemBookings, comments, userRepository));
-            }
+            List<Comment> comments = commentRepository.itemComments(item.getId());
+            ItemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentsDto(item, itemBookings, comments, userRepository));
         }
         return ItemDtoList;
     }
