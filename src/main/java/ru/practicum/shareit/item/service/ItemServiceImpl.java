@@ -69,7 +69,8 @@ public class ItemServiceImpl implements ItemService {
                 itemBookings = bookingRepository.itemBookings(item.getId());
             }
             if (Objects.equals(item.getOwnerId(), ownerId)) {
-                ItemDtoList.add(ItemDtoMapper.toItemWithBookingsDto(item, itemBookings));
+                List<Comment> comments = commentRepository.itemComments(item.getId());
+                ItemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentsDto(item, itemBookings, comments, userRepository));
             }
         }
         return ItemDtoList;
@@ -77,6 +78,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItemById(Integer itemId, Integer ownerId) throws NotFoundException {
+        List<Comment> comments = commentRepository.itemComments(itemId);
         List<Booking> itemBookings = new ArrayList<>();
         if (itemRepository.findById(itemId).isPresent()) {
             if (Objects.equals(itemRepository.findById(itemId).get().getOwnerId(), ownerId)) {
@@ -84,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         if (itemRepository.findById(itemId).isPresent()) {
-            return ItemDtoMapper.toItemWithBookingsDto(itemRepository.findById(itemId).get(), itemBookings);
+            return ItemDtoMapper.toItemWithBookingsAndCommentsDto(itemRepository.findById(itemId).get(), itemBookings, comments, userRepository);
         } else {
             throw new NotFoundException("getItemById: No Item Found--");
         }
