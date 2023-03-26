@@ -34,7 +34,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = BookingDtoMapper.addBookingToBooking(request, userId);
         bookingRepository.save(booking);
         log.info("Booking crated, ID: {}", booking.getId());
-        return BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
+        return BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
     }
 
     @Override
@@ -58,7 +58,7 @@ public class BookingServiceImpl implements BookingService {
             booking.setStatus("REJECTED");
             bookingRepository.save(booking);
         }
-        return BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
+        return BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class BookingServiceImpl implements BookingService {
         if (!Objects.equals(booking.getBooker(), userId) && !Objects.equals(itemRepository.findById(booking.getItemId()).get().getOwnerId(), userId)) {
             throw new NotFoundException("findBookingById: --NotFoundException--");
         }
-        return BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
+        return BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
     }
 
     @Override
@@ -108,26 +108,26 @@ public class BookingServiceImpl implements BookingService {
 
     private void bookingDtoAdding(String state, List<BookingDto> bookingDtoList, Booking booking) throws ValidationException {
         if (Objects.equals(state, "ALL")) {
-            bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+            bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
         } else if (Objects.equals(state, "CURRENT")) {
             if (booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
             }
         } else if (Objects.equals(state, "PAST")) {
             if (Objects.equals(booking.getStatus(), "APPROVED") && booking.getEnd().isBefore(LocalDateTime.now())) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
             }
         } else if (Objects.equals(state, "FUTURE")) {
             if ((Objects.equals(booking.getStatus(), "APPROVED") || Objects.equals(booking.getStatus(), "WAITING")) && booking.getStart().isAfter(LocalDateTime.now())) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
             }
         } else if (Objects.equals(state, "WAITING")) {
             if (Objects.equals(booking.getStatus(), "WAITING")) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
             }
         } else if (Objects.equals(state, "REJECTED")) {
             if (Objects.equals(booking.getStatus(), "REJECTED")) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository));
+                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
             }
         } else {
             throw new ValidationException("Unknown state: " + state);

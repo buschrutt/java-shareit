@@ -8,15 +8,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 public class LastOrNextBookingDtoMapper {
 
-    public static LastOrNextBookingDto addBookingToDto(Booking booking, UserRepository userRepository, ItemRepository itemRepository) {
-        User user = null;
-        Item item = null;
-        if (userRepository.findById(booking.getBooker()).isPresent()) {
-            user = userRepository.findById(booking.getBooker()).get();
-        }
-        if (itemRepository.findById(booking.getItemId()).isPresent()) {
-            item = itemRepository.findById(booking.getItemId()).get();
-        }
+    public static LastOrNextBookingDto addBookingToDto(Booking booking, User user, Item item) {
         return LastOrNextBookingDto.builder()
                 .id(booking.getId())
                 .start(booking.getStart())

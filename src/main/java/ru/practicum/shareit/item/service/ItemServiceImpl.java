@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.booking.dto.LastOrNextBookingDto;
+import ru.practicum.shareit.booking.dto.LastOrNextBookingDtoMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.error.NotFoundException;
@@ -69,7 +71,7 @@ public class ItemServiceImpl implements ItemService {
                 itemBookings = bookingRepository.findBookingsByStatusAndItemIdOrderByStartDesc("APPROVED", item.getId());
             }
             List<Comment> comments = commentRepository.findCommentsByItemOrderByCreatedDesc(item.getId());
-            itemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentsDto(item, itemBookings, comments, userRepository, itemRepository));
+            itemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentDtos(item, convertCommentsToDto(comments), findLastOrNextBooking(itemBookings, true), findLastOrNextBooking(itemBookings, false)));
         }
         return itemDtoList;
     }
@@ -84,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
             }
         }
         if (itemRepository.findById(itemId).isPresent()) {
-            return ItemDtoMapper.toItemWithBookingsAndCommentsDto(itemRepository.findById(itemId).get(), itemBookings, comments, userRepository, itemRepository);
+            return ItemDtoMapper.toItemWithBookingsAndCommentDtos(itemRepository.findById(itemId).get(), convertCommentsToDto(comments), findLastOrNextBooking(itemBookings, true), findLastOrNextBooking(itemBookings, false)); // true if next booking
         } else {
             throw new NotFoundException("getItemById: No Item Found--");
         }
@@ -115,6 +117,40 @@ public class ItemServiceImpl implements ItemService {
     }
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
+
+    private LastOrNextBookingDto findLastOrNextBooking(List<Booking> itemBookings, Boolean isNext) {
+        LastOrNextBookingDto bookingDto = null;
+        if (isNext) {
+            for (Booking booking : itemBookings) {
+                if (booking.getStart().isAfter(LocalDateTime.now())) {
+                    if (bookingDto == null) {
+                        bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
+                    } else if (booking.getStart().isBefore(bookingDto.getStart())) {
+                        bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
+                    }
+                }
+            }
+        } else {
+            for (Booking booking : itemBookings) {
+                if (booking.getStart().isBefore(LocalDateTime.now())) {
+                    if (bookingDto == null) {
+                        bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
+                    } else if (booking.getStart().isAfter(bookingDto.getStart())) {
+                        bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
+                    }
+                }
+            }
+        }
+        return bookingDto;
+    }
+
+    private List<CommentDto> convertCommentsToDto(List<Comment> comments){
+        List<CommentDto> itemCommentDtos = new ArrayList<>();
+        for (Comment comment : comments) {
+            itemCommentDtos.add(CommentDtoMapper.toCommentDto(comment, userRepository));
+        }
+        return itemCommentDtos;
+    }
 
     private void itemValidation(Item item) throws ValidationException, NotFoundException {
         if (item.getName().isEmpty() || item.getDescription() == null || item.getAvailable() == null) {
