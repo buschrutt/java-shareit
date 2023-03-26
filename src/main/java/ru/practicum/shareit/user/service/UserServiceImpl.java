@@ -30,11 +30,11 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new NotFoundException("getUserById: No User Found--");
         }
-        if (user.getEmail() != null && !Objects.equals(user.getEmail(), newUser.getEmail())){
+        if (user.getEmail() != null && !Objects.equals(user.getEmail(), newUser.getEmail())) {
             emailValidation(user.getEmail());
             newUser.setEmail(user.getEmail());
         }
-        if (user.getName() != null){
+        if (user.getName() != null) {
             newUser.setName(user.getName());
         }
         return UserDtoMapper.toUserDto(userRepository.save(newUser));
@@ -42,12 +42,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAllUsers() {
-        List<UserDto> UserDtoList = new ArrayList<>();
+        List<UserDto> userDtoList = new ArrayList<>();
         List<User> users = userRepository.findAll();
         for (User user : users){
-            UserDtoList.add(UserDtoMapper.toUserDto(user));
+            userDtoList.add(UserDtoMapper.toUserDto(user));
         }
-        return UserDtoList;
+        return userDtoList;
     }
 
     @Override

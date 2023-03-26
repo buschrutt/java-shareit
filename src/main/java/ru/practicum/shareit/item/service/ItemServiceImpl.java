@@ -39,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto updateItem(Integer itemId, Item item, Integer ownerId) throws NotFoundException {
         Item newItem;
-        if (!userRepository.existsById(ownerId)){
+        if (!userRepository.existsById(ownerId)) {
             throw new NotFoundException("updateItem: No User Found--");
         }
         if (itemRepository.findById(itemId).isPresent()) {
@@ -61,17 +61,17 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getAllUserItems(Integer ownerId) {
-        List<ItemDto> ItemDtoList = new ArrayList<>();
+        List<ItemDto> itemDtoList = new ArrayList<>();
         List<Item> items = itemRepository.ownerItems(ownerId);
-        for (Item item : items){
+        for (Item item : items) {
             List<Booking> itemBookings = new ArrayList<>();
             if (Objects.equals(itemRepository.findById(item.getId()).get().getOwnerId(), ownerId)) {
                 itemBookings = bookingRepository.itemBookings(item.getId());
             }
             List<Comment> comments = commentRepository.itemComments(item.getId());
-            ItemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentsDto(item, itemBookings, comments, userRepository, itemRepository));
+            itemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentsDto(item, itemBookings, comments, userRepository, itemRepository));
         }
-        return ItemDtoList;
+        return itemDtoList;
     }
 
     @Override
@@ -92,22 +92,22 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItemsSearched(String text) {
-        List<ItemDto> ItemDtoList = new ArrayList<>();
+        List<ItemDto> itemDtoList = new ArrayList<>();
         if (text.isEmpty()) {
-            return ItemDtoList;
+            return itemDtoList;
         }
         List<Item> items = itemRepository.findAll();
-        for (Item item : items){
+        for (Item item : items) {
             if (item.getAvailable() && (item.getName().toLowerCase().contains(text.toLowerCase()) || item.getDescription().toLowerCase().contains(text.toLowerCase()))) {
-                ItemDtoList.add(ItemDtoMapper.toItemDto(item));
+                itemDtoList.add(ItemDtoMapper.toItemDto(item));
             }
         }
-        return ItemDtoList;
+        return itemDtoList;
     }
 
     @Override
     public CommentDto addComment(Comment comment, Integer userId, Integer itemId) throws ValidationException {
-        commentValidation (comment, userId, itemId);
+        commentValidation(comment, userId, itemId);
         comment.setAuthorName(userId);
         comment.setItem(itemId);
         comment.setCreated(LocalDateTime.now());
@@ -125,7 +125,7 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    void commentValidation (Comment comment, Integer userId, Integer itemId) throws ValidationException {
+    void commentValidation(Comment comment, Integer userId, Integer itemId) throws ValidationException {
         if (comment.getText().isEmpty()) {
             throw new ValidationException("commentValidation: text is Empty--");
         }

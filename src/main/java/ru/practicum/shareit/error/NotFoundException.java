@@ -1,7 +1,8 @@
 package ru.practicum.shareit.error;
 
 public class NotFoundException extends Throwable {
-    public NotFoundException() {}
+    public NotFoundException() {
+    }
 
     public NotFoundException(final String message) {
         super(message);

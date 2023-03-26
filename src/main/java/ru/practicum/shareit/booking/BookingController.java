@@ -20,7 +20,7 @@ public class BookingController {
     final BookingService bookingService;
     final String epBookingId = "/{bookingId}";
 
-    final private String sharerId = "X-Sharer-User-Id";
+    final String sharerId = "X-Sharer-User-Id";
 
     @Autowired
     public BookingController(BookingService bookingService) {
@@ -33,8 +33,8 @@ public class BookingController {
     }
 
     @PatchMapping(epBookingId)
-    public BookingDto BookingApproval(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer bookingId, @RequestParam Boolean approved) throws NotFoundException, ValidationException {
-        return bookingService.BookingApproval(userId, bookingId, approved);
+    public BookingDto bookingApproval(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer bookingId, @RequestParam Boolean approved) throws NotFoundException, ValidationException {
+        return bookingService.bookingApproval(userId, bookingId, approved);
     }
 
     @GetMapping(epBookingId)

@@ -18,9 +18,9 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
 
-    final private ItemServiceImpl itemService;
-    final private String epItemId = "/{itemId}";
-    final private String sharerId = "X-Sharer-User-Id";
+    final ItemServiceImpl itemService;
+    final String epItemId = "/{itemId}";
+    final String sharerId = "X-Sharer-User-Id";
 
     public ItemController(ItemServiceImpl itemService) {
         this.itemService = itemService;

@@ -16,8 +16,8 @@ import java.util.List;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    final private UserServiceImpl userService;
-    final private String epUserId = "/{userId}";
+    final UserServiceImpl userService;
+    final String epUserId = "/{userId}";
 
     public UserController(UserServiceImpl userService) {
         this.userService = userService;

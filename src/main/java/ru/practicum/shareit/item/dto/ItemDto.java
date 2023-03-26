@@ -4,10 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.PackagePrivate;
 import ru.practicum.shareit.booking.dto.LastNextBookingDto;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.item.model.Comment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

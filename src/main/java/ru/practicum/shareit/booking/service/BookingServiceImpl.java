@@ -21,7 +21,7 @@ import java.util.Objects;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final ItemRepository itemRepository;
@@ -37,7 +37,7 @@ public class BookingServiceImpl implements BookingService{
     }
 
     @Override
-    public BookingDto BookingApproval(Integer userId, Integer bookingId, Boolean isApproved) throws NotFoundException, ValidationException {
+    public BookingDto bookingApproval(Integer userId, Integer bookingId, Boolean isApproved) throws NotFoundException, ValidationException {
         Booking booking;
         if (bookingRepository.findById(bookingId).isPresent()) {
             if (!Objects.equals(itemRepository.findById(bookingRepository.findById(bookingId).get().getItemId()).get().getOwnerId(), userId)) {
@@ -135,7 +135,7 @@ public class BookingServiceImpl implements BookingService{
             throw new NotFoundException("requestValidation: No User Found--");
         }
         if (itemRepository.findById(request.getItemId()).isPresent()) {
-            if(!itemRepository.findById(request.getItemId()).get().getAvailable()) {
+            if (!itemRepository.findById(request.getItemId()).get().getAvailable()) {
                 throw new ValidationException("requestValidation: Item isn't available--");
             }
             if (Objects.equals(itemRepository.findById(request.getItemId()).get().getOwnerId(), userId)) {

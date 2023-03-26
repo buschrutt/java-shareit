@@ -11,7 +11,7 @@ public interface BookingService {
 
     BookingDto addBooking(BookingRequestDto request, Integer userId) throws ValidationException, NotFoundException;
 
-    BookingDto BookingApproval(Integer userId, Integer bookingId, Boolean isApproved) throws NotFoundException, ValidationException;
+    BookingDto bookingApproval(Integer userId, Integer bookingId, Boolean isApproved) throws NotFoundException, ValidationException;
 
     BookingDto findBookingById(Integer userId, Integer bookingId) throws NotFoundException, ValidationException;
 

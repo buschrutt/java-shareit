@@ -13,7 +13,9 @@ import javax.persistence.*;
 
 @Entity
 @Table (name = "users")
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 @PackagePrivate
 public class User {
     @Id
