@@ -144,7 +144,7 @@ public class ItemServiceImpl implements ItemService {
         return bookingDto;
     }
 
-    private List<CommentDto> convertCommentsToDto(List<Comment> comments){
+    private List<CommentDto> convertCommentsToDto(List<Comment> comments) {
         List<CommentDto> itemCommentDtos = new ArrayList<>();
         for (Comment comment : comments) {
             itemCommentDtos.add(CommentDtoMapper.toCommentDto(comment, userRepository));
