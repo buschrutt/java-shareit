@@ -10,6 +10,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -80,7 +81,8 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("findAllUserBookings: --NotFoundException--");
         }
         List<BookingDto> bookingDtoList = new ArrayList<>();
-        for (Booking booking : bookingRepository.userBookingsSorted(userId)) {
+        List<Booking> bookings = bookingRepository.findBookingsByBookerOrderByStartDesc(userId);
+        for (Booking booking : bookings) {
             bookingDtoAdding(state, bookingDtoList, booking);
         }
         return bookingDtoList;
@@ -92,7 +94,13 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("findAllUserBookings: No User Found--");
         }
         List<BookingDto> bookingDtoList = new ArrayList<>();
-        for (Booking booking : bookingRepository.ownerBookingsSorted(ownerId)) {
+        List<Integer> itemIds = new ArrayList<>();
+        List<Item> items = itemRepository.findItemsByOwnerId(ownerId);
+        for (Item item : items) {
+            itemIds.add(item.getId());
+        }
+        List<Booking> bookings = bookingRepository.findBookingsByItemIdInOrderByStartDesc(itemIds);
+        for (Booking booking : bookings) {
             bookingDtoAdding(state, bookingDtoList, booking);
         }
         return bookingDtoList;

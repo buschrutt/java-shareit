@@ -62,13 +62,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAllUserItems(Integer ownerId) {
         List<ItemDto> itemDtoList = new ArrayList<>();
-        List<Item> items = itemRepository.ownerItems(ownerId);
+        List<Item> items = itemRepository.findItemsByOwnerId(ownerId);
         for (Item item : items) {
             List<Booking> itemBookings = new ArrayList<>();
             if (Objects.equals(itemRepository.findById(item.getId()).get().getOwnerId(), ownerId)) {
-                itemBookings = bookingRepository.itemBookings(item.getId());
+                itemBookings = bookingRepository.findBookingsByStatusAndItemIdOrderByStartDesc("APPROVED", item.getId());
             }
-            List<Comment> comments = commentRepository.itemComments(item.getId());
+            List<Comment> comments = commentRepository.findCommentsByItemOrderByCreatedDesc(item.getId());
             itemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentsDto(item, itemBookings, comments, userRepository, itemRepository));
         }
         return itemDtoList;
@@ -76,11 +76,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItemById(Integer itemId, Integer ownerId) throws NotFoundException {
-        List<Comment> comments = commentRepository.itemComments(itemId);
+        List<Comment> comments = commentRepository.findCommentsByItemOrderByCreatedDesc(itemId);
         List<Booking> itemBookings = new ArrayList<>();
         if (itemRepository.findById(itemId).isPresent()) {
             if (Objects.equals(itemRepository.findById(itemId).get().getOwnerId(), ownerId)) {
-                itemBookings = bookingRepository.itemBookings(itemId);
+                itemBookings = bookingRepository.findBookingsByStatusAndItemIdOrderByStartDesc("APPROVED", itemId);
             }
         }
         if (itemRepository.findById(itemId).isPresent()) {
@@ -129,7 +129,7 @@ public class ItemServiceImpl implements ItemService {
         if (comment.getText().isEmpty()) {
             throw new ValidationException("commentValidation: text is Empty--");
         }
-        List<Booking> endBookingTimes = bookingRepository.userItemBookings(userId, itemId);
+        List<Booking> endBookingTimes = bookingRepository.findBookingsByStatusAndBookerAndItemIdOrderByStartDesc("APPROVED", userId, itemId);
         for (Booking booking : endBookingTimes) {
             if (booking.getEnd().isBefore(LocalDateTime.now())) {
                 return;
