@@ -120,24 +120,15 @@ public class ItemServiceImpl implements ItemService {
 
     private LastOrNextBookingDto findLastOrNextBooking(List<Booking> itemBookings, Boolean isNext) {
         LastOrNextBookingDto bookingDto = null;
-        if (isNext) {
-            for (Booking booking : itemBookings) {
-                if (booking.getStart().isAfter(LocalDateTime.now())) {
-                    if (bookingDto == null) {
-                        bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
-                    } else if (booking.getStart().isBefore(bookingDto.getStart())) {
-                        bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
-                    }
+        for (Booking booking : itemBookings) {
+            if (isNext && booking.getStart().isAfter(LocalDateTime.now())) {
+                if ((bookingDto == null || booking.getStart().isBefore(bookingDto.getStart()))) {
+                    bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
                 }
             }
-        } else {
-            for (Booking booking : itemBookings) {
-                if (booking.getStart().isBefore(LocalDateTime.now())) {
-                    if (bookingDto == null) {
-                        bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
-                    } else if (booking.getStart().isAfter(bookingDto.getStart())) {
-                        bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
-                    }
+            if (!isNext && booking.getStart().isBefore(LocalDateTime.now())) {
+                if ((bookingDto == null || booking.getStart().isAfter(bookingDto.getStart()))) {
+                    bookingDto = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
                 }
             }
         }

@@ -107,36 +107,41 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void bookingDtoAdding(String state, List<BookingDto> bookingDtoList, Booking booking) throws ValidationException {
-        if (Objects.equals(state, "ALL")) {
-            bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
-        } else if (Objects.equals(state, "CURRENT")) {
-            if (booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
+        switch (state) {
+            case "ALL":
                 bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
-            }
-        } else if (Objects.equals(state, "PAST")) {
-            if (Objects.equals(booking.getStatus(), "APPROVED") && booking.getEnd().isBefore(LocalDateTime.now())) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
-            }
-        } else if (Objects.equals(state, "FUTURE")) {
-            if ((Objects.equals(booking.getStatus(), "APPROVED") || Objects.equals(booking.getStatus(), "WAITING")) && booking.getStart().isAfter(LocalDateTime.now())) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
-            }
-        } else if (Objects.equals(state, "WAITING")) {
-            if (Objects.equals(booking.getStatus(), "WAITING")) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
-            }
-        } else if (Objects.equals(state, "REJECTED")) {
-            if (Objects.equals(booking.getStatus(), "REJECTED")) {
-                bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
-            }
-        } else {
-            throw new ValidationException("Unknown state: " + state);
+                break;
+            case "CURRENT":
+                if (booking.getEnd().isAfter(LocalDateTime.now()) && booking.getStart().isBefore(LocalDateTime.now())) {
+                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
+                }
+                break;
+            case "PAST":
+                if (Objects.equals(booking.getStatus(), "APPROVED") && booking.getEnd().isBefore(LocalDateTime.now())) {
+                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
+                }
+                break;
+            case "FUTURE":
+                if ((Objects.equals(booking.getStatus(), "APPROVED") || Objects.equals(booking.getStatus(), "WAITING")) && booking.getStart().isAfter(LocalDateTime.now())) {
+                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
+                }
+                break;
+            case "WAITING":
+                if (Objects.equals(booking.getStatus(), "WAITING")) {
+                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
+                }
+                break;
+            case "REJECTED":
+                if (Objects.equals(booking.getStatus(), "REJECTED")) {
+                    bookingDtoList.add(BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get()));
+                }
+                break;
+            default:
+                throw new ValidationException("Unknown state: " + state);
         }
     }
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
-
-
 
     private void requestValidation(BookingRequestDto request, Integer userId) throws ValidationException, NotFoundException {
         if (!userRepository.existsById(userId)) {
