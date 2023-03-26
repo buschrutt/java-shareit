@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findAllUsers() {
         List<UserDto> userDtoList = new ArrayList<>();
         List<User> users = userRepository.findAll();
-        for (User user : users){
+        for (User user : users) {
             userDtoList.add(UserDtoMapper.toUserDto(user));
         }
         return userDtoList;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         String ePattern = "^[a-zA-Z\\d.!#$%&'*+/=?^_`{|}~-]+@((\\[\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}])|(([a-zA-Z\\-\\d]+\\.)+[a-zA-Z]{2,}))$";
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
         java.util.regex.Matcher m = p.matcher(email);
-        if (!m.matches()){
+        if (!m.matches()) {
             throw new ValidationException("userValidation: Email Validation Error--");
         }
     }
