@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @PackagePrivate
-public class LastNextBookingDto {
+public class LastOrNextBookingDto {
 
     Integer id;
     LocalDateTime start;

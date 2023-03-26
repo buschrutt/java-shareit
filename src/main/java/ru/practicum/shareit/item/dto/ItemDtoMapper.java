@@ -1,8 +1,8 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.RequiredArgsConstructor;
-import ru.practicum.shareit.booking.dto.LastNextBookingDto;
-import ru.practicum.shareit.booking.dto.LastNextBookingDtoMapper;
+import ru.practicum.shareit.booking.dto.LastOrNextBookingDto;
+import ru.practicum.shareit.booking.dto.LastOrNextBookingDtoMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
@@ -42,31 +42,31 @@ public class ItemDtoMapper {
         return itemDto;
     }
 
-    private static LastNextBookingDto findLastBooking(List<Booking> itemBookings, UserRepository userRepository, ItemRepository itemRepository) {
+    private static LastOrNextBookingDto findLastBooking(List<Booking> itemBookings, UserRepository userRepository, ItemRepository itemRepository) {
         if (itemBookings.isEmpty()) {
             return null;
         }
-        LastNextBookingDto lastBooking = null;
+        LastOrNextBookingDto lastBooking = null;
         for (Booking booking : itemBookings) {
             if (booking.getStart().isBefore(LocalDateTime.now())) {
                 if (lastBooking == null) {
-                    lastBooking = LastNextBookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
+                    lastBooking = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
                 } else if (booking.getStart().isAfter(lastBooking.getStart())) {
-                    lastBooking = LastNextBookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
+                    lastBooking = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
                 }
             }
         }
         return lastBooking;
     }
 
-    private static LastNextBookingDto findNextBooking(List<Booking> itemBookings, UserRepository userRepository, ItemRepository itemRepository) {
-        LastNextBookingDto nextBooking = null;
+    private static LastOrNextBookingDto findNextBooking(List<Booking> itemBookings, UserRepository userRepository, ItemRepository itemRepository) {
+        LastOrNextBookingDto nextBooking = null;
         for (Booking booking : itemBookings) {
             if (booking.getStart().isAfter(LocalDateTime.now())) {
                 if (nextBooking == null) {
-                    nextBooking = LastNextBookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
+                    nextBooking = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
                 } else if (booking.getStart().isBefore(nextBooking.getStart())) {
-                    nextBooking = LastNextBookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
+                    nextBooking = LastOrNextBookingDtoMapper.addBookingToDto(booking, userRepository, itemRepository);
                 }
             }
         }

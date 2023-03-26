@@ -6,9 +6,9 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-public class LastNextBookingDtoMapper {
+public class LastOrNextBookingDtoMapper {
 
-    public static LastNextBookingDto addBookingToDto(Booking booking, UserRepository userRepository, ItemRepository itemRepository) {
+    public static LastOrNextBookingDto addBookingToDto(Booking booking, UserRepository userRepository, ItemRepository itemRepository) {
         User user = null;
         Item item = null;
         if (userRepository.findById(booking.getBooker()).isPresent()) {
@@ -17,7 +17,7 @@ public class LastNextBookingDtoMapper {
         if (itemRepository.findById(booking.getItemId()).isPresent()) {
             item = itemRepository.findById(booking.getItemId()).get();
         }
-        return LastNextBookingDto.builder()
+        return LastOrNextBookingDto.builder()
                 .id(booking.getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())

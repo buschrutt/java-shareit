@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
+
+
     @Query(
             value = "SELECT * FROM bookings WHERE bookings.booker_id = ? ORDER BY bookings.start_date DESC",
             nativeQuery = true)
