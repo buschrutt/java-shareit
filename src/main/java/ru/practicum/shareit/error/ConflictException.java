@@ -1,7 +1,8 @@
 package ru.practicum.shareit.error;
 
 public class ConflictException extends Throwable {
-    public ConflictException() {}
+    public ConflictException() {
+    }
 
     public ConflictException(final String message) {
         super(message);

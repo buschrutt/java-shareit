@@ -1,21 +1,11 @@
 package ru.practicum.shareit.item.repository;
 
-import lombok.experimental.PackagePrivate;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-@PackagePrivate
-@Repository
-public class ItemRepository {
-    final Map<Integer, Item> items = new HashMap<>();
-    Integer currentItemId = 0;
+public interface ItemRepository extends JpaRepository<Item, Integer>  {
 
-    public Integer renewCurrentItemId() {
-        return ++currentItemId;
-    }
-
-    public Map<Integer, Item> getItems() { return items; }
+    List<Item> findItemsByOwnerId(Integer ownerId);
 }
