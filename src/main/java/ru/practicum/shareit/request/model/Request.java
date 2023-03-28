@@ -22,14 +22,14 @@ import java.time.LocalDateTime;
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    Integer id;
+
+    @Column(name = "created")
+    LocalDateTime created;
 
     @Column(name = "description")
     String description;
 
     @Column(name = "requester_id")
-    int requesterId;
-
-    @Column(name = "created")
-    LocalDateTime created;
+    Integer requesterId;
 }

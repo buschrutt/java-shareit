@@ -2,14 +2,15 @@ package ru.practicum.shareit.request.dto;
 
 import ru.practicum.shareit.request.model.Request;
 
+import java.time.LocalDateTime;
+
 public class RequestDtoMapper {
 
     public static Request addDtoToRequest(RequestDto request, Integer userId) {
         return Request.builder()
-                .id(request.getId())
                 .requesterId(userId)
                 .description(request.getDescription())
-                .created(request.getCreated())
+                .created(LocalDateTime.now())
                 .build();
     }
 

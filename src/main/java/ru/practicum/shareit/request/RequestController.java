@@ -1,10 +1,10 @@
 package ru.practicum.shareit.request;
 
 import lombok.experimental.PackagePrivate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.error.NotFoundException;
+import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.request.dto.RequestDto;
-import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.service.RequestService;
 
 import java.util.List;
@@ -25,12 +25,12 @@ public class RequestController {
     }
 
     @PostMapping
-    public RequestDto addRequest(@RequestHeader(value = sharerId) Integer userId, @RequestBody RequestDto requestDto) {
+    public RequestDto addRequest(@RequestHeader(value = sharerId) Integer userId, @RequestBody RequestDto requestDto) throws ValidationException, NotFoundException {
         return requestService.addRequest(userId, requestDto);
     }
 
     @GetMapping
-    public List<RequestDto> findUserRequests(@RequestHeader(value = sharerId) Integer userId) {
+    public List<RequestDto> findUserRequests(@RequestHeader(value = sharerId) Integer userId) throws NotFoundException {
         return requestService.findUserRequests(userId);
     }
 
@@ -40,7 +40,7 @@ public class RequestController {
     }
 
     @GetMapping("/{requestId}")
-    public RequestDto findRequestById(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer requestId) {
+    public RequestDto findRequestById(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer requestId) throws NotFoundException {
         return requestService.findRequestById(userId, requestId);
     }
 

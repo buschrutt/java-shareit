@@ -80,6 +80,9 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("findAllUserBookings: --NotFoundException--");
         }
+        if (size <= 0 || from < 0) {
+            throw new ValidationException("findAllUserBookings: ValidationException--");
+        }
         List<BookingDto> bookingDtoList = new ArrayList<>();
         List<Booking> bookings = bookingRepository.findBookingsByBookerOrderByStartDesc(userId);
         for (Booking booking : bookings) {
@@ -92,6 +95,9 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> findAllOwnerBookings(Integer ownerId, String state, Integer from, Integer size) throws NotFoundException, ValidationException {
         if (!userRepository.existsById(ownerId)) {
             throw new NotFoundException("findAllUserBookings: No User Found--");
+        }
+        if (size <= 0 || from < 0) {
+            throw new ValidationException("findAllOwnerBookings: ValidationException--");
         }
         List<BookingDto> bookingDtoList = new ArrayList<>();
         List<Integer> itemIds = new ArrayList<>();
