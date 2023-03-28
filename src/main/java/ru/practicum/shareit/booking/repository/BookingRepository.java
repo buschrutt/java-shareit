@@ -19,6 +19,6 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query(
             value = "SELECT * FROM bookings WHERE bookings.item_id IN (SELECT id FROM items WHERE items.owner_id = ?) ORDER BY bookings.start_date DESC",
             nativeQuery = true)
-    List<Booking> ownerBookingsSorted(Integer ownerId);
+    List<Booking> ownerBookingsSorted(Integer ownerId);sx x djjj
     */
 }
