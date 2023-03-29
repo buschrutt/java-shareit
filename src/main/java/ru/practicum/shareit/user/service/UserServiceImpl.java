@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
 
-    private void emailValidation(String email) throws ValidationException {
+    public static void emailValidation(String email) throws ValidationException {
         if (email == null) {
             throw new ValidationException("userValidation: Email Is Empty--");
         }
