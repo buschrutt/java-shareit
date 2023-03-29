@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.user.repository.UserRepository;
 
 
 @RequiredArgsConstructor

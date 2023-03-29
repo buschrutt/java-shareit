@@ -55,7 +55,7 @@ public class ItemMapperTests {
                 .authorName("Author")
                 .created(timeNow)
                 .build();
-        List<CommentDto > itemComments = new ArrayList<>();
+        List<CommentDto> itemComments = new ArrayList<>();
         itemComments.add(commentDto);
         LastOrNextBookingDto nextBookingDto = LastOrNextBookingDto.builder()
                 .id(5)
