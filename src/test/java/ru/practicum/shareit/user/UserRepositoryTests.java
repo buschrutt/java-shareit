@@ -24,9 +24,9 @@ public class UserRepositoryTests {
     @BeforeEach
     void beforeEach() {
         userRepository.deleteAll();
-        userRepository.save(User.builder().name("User1").email("User1@mail.ru").build());
-        userRepository.save(User.builder().name("User2").email("User2@mail.ru").build());
-        userRepository.save(User.builder().name("User3").email("User3@mail.ru").build());
+        userRepository.save(User.builder().id(1).name("User1").email("User1@mail.ru").build());
+        userRepository.save(User.builder().id(2).name("User2").email("User2@mail.ru").build());
+        userRepository.save(User.builder().id(3).name("User3").email("User3@mail.ru").build());
     }
 
     @AfterEach
