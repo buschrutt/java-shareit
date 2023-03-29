@@ -4,8 +4,10 @@ import lombok.experimental.PackagePrivate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -16,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @PackagePrivate
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class UserRepositoryTests {
 
     @Autowired
@@ -23,19 +27,19 @@ public class UserRepositoryTests {
 
     @BeforeEach
     void beforeEach() {
-
+        userRepository.save(User.builder().name("User1").email("User1@mail.ru").build());
+        userRepository.save(User.builder().name("User2").email("User2@mail.ru").build());
+        userRepository.save(User.builder().name("User3").email("User3@mail.ru").build());
     }
 
     @AfterEach
     void afterEach() {
-
+        userRepository.deleteAll();
     }
 
     @Test
     void userRepositoryTest() {
-        userRepository.save(User.builder().name("User1").email("User1@mail.ru").build());
-        userRepository.save(User.builder().name("User2").email("User2@mail.ru").build());
-        userRepository.save(User.builder().name("User3").email("User3@mail.ru").build());
+
         List<User> users = userRepository.findAll();
             assertEquals(users.size(), 3);
             assertEquals(users.get(0).getId(), 1);
@@ -51,7 +55,6 @@ public class UserRepositoryTests {
         userRepository.delete(userRepository.findById(1).get());
             assertTrue(userRepository.findById(1).isEmpty());
             assertEquals(userRepository.findAll().size(), 2);
-        userRepository.deleteAll();
     }
 
 }
