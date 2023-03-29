@@ -113,7 +113,7 @@ public class ItemServiceImpl implements ItemService {
         comment.setAuthorName(userId);
         comment.setItem(itemId);
         comment.setCreated(LocalDateTime.now());
-        return CommentDtoMapper.toCommentDto(commentRepository.save(comment), userRepository);
+        return CommentDtoMapper.toCommentDto(commentRepository.save(comment), userRepository.findById(comment.getAuthorName()).get().getName());
     }
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
@@ -138,7 +138,7 @@ public class ItemServiceImpl implements ItemService {
     private List<CommentDto> convertCommentsToDto(List<Comment> comments) {
         List<CommentDto> itemCommentDtos = new ArrayList<>();
         for (Comment comment : comments) {
-            itemCommentDtos.add(CommentDtoMapper.toCommentDto(comment, userRepository));
+            itemCommentDtos.add(CommentDtoMapper.toCommentDto(comment, userRepository.findById(comment.getAuthorName()).get().getName()));
         }
         return itemCommentDtos;
     }

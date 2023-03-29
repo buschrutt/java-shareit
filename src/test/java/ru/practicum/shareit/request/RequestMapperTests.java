@@ -55,8 +55,7 @@ public class RequestMapperTests {
                 .created(timeNow)
                 .items(items)
                 .build();
-        RequestDto requestDtoBuilt = RequestDtoMapper.addRequestToDto(request, items);
-        assertEquals(requestDtoBuilt.getId(), requestDto.getId());
+        assertEquals(RequestDtoMapper.addRequestToDto(request, items).toString(), requestDto.toString());
     }
 
 }

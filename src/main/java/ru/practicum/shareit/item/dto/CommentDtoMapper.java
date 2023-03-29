@@ -8,12 +8,12 @@ import ru.practicum.shareit.user.repository.UserRepository;
 @RequiredArgsConstructor
 public class CommentDtoMapper {
 
-    public static CommentDto toCommentDto(Comment comment, UserRepository userRepository) {
+    public static CommentDto toCommentDto(Comment comment, String authorName) {
         return CommentDto.builder()
                 .id(comment.getId())
                 .text(comment.getText())
                 .item(comment.getItem())
-                .authorName(userRepository.findById(comment.getAuthorName()).get().getName())
+                .authorName(authorName)
                 .created(comment.getCreated())
                 .build();
     }

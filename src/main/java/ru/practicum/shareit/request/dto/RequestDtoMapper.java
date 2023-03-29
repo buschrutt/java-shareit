@@ -19,7 +19,7 @@ public class RequestDtoMapper {
     public static RequestDto addRequestToDto(Request request, List<Item> items) {
         return RequestDto.builder()
                 .id(request.getId())
-                .requesterId(request.getId())
+                .requesterId(request.getRequesterId())
                 .description(request.getDescription())
                 .created(request.getCreated())
                 .items(items)
