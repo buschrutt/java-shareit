@@ -53,13 +53,13 @@ public class UserRepositoryTests {
     void userRepositoryTest() {
         List<User> users = userRepository.findAll();
             assertEquals(users.size(), 3);
-        Integer user2Id = users.get(1).getId();
-        User user = userRepository.findById(user2Id).get();
-            assertEquals(user.getId(), users.get(1).getId());
-            assertEquals(user.getName(), users.get(1).getName());
-            assertEquals(user.getEmail(), users.get(1).getEmail());
-        userRepository.delete(userRepository.findById(user2Id).get());
-            assertTrue(userRepository.findById(user2Id).isEmpty());
+        Integer testUserId = users.get(0).getId();
+        User user = userRepository.findById(testUserId).get();
+            assertEquals(user.getId(), users.get(0).getId());
+            assertEquals(user.getName(), users.get(0).getName());
+            assertEquals(user.getEmail(), users.get(0).getEmail());
+        userRepository.delete(userRepository.findById(testUserId).get());
+            assertTrue(userRepository.findById(testUserId).isEmpty());
             assertEquals(userRepository.findAll().size(), 2);
     }
 
