@@ -7,11 +7,10 @@ import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class UserServiceTest {
+class UserServiceTests {
 
     @Test
     void addUserUnitTest0() throws ValidationException, ConflictException {
