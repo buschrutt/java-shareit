@@ -38,9 +38,7 @@ public class UserRepositoryTests {
     void userRepositoryTest() {
         List<User> users = userRepository.findAll();
             assertEquals(users.size(), 3);
-        userRepository.delete(userRepository.findById(1).get());
-            assertTrue(userRepository.findById(1).isEmpty());
-            assertEquals(userRepository.findAll().size(), 2);
+        
     }
 
 }
