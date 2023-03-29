@@ -27,9 +27,6 @@ public class UserRepositoryTests {
 
     @BeforeEach
     void beforeEach() {
-        userRepository.save(User.builder().name("User1").email("User1@mail.ru").build());
-        userRepository.save(User.builder().name("User2").email("User2@mail.ru").build());
-        userRepository.save(User.builder().name("User3").email("User3@mail.ru").build());
     }
 
     @AfterEach
@@ -39,19 +36,33 @@ public class UserRepositoryTests {
 
     @Test
     void userRepositoryTest() {
-
+        User user1 = User.builder()
+                .name("User1")
+                .email("User1@mail.ru")
+                .build();
+        User user2 = User.builder()
+                .name("User2")
+                .email("User2@mail.ru")
+                .build();
+        User user3 = User.builder()
+                .name("User3")
+                .email("User3@mail.ru")
+                .build();
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
         List<User> users = userRepository.findAll();
             assertEquals(users.size(), 3);
-            assertEquals(users.get(0).getId(), 1);
-            assertEquals(users.get(0).getName(), "User1");
-            assertEquals(users.get(0).getEmail(), "User1@mail.ru");
-            assertEquals(users.get(2).getId(), 3);
-            assertEquals(users.get(2).getName(), "User3");
-            assertEquals(users.get(2).getEmail(), "User3@mail.ru");
+            assertEquals(users.get(0).getId(), user1.getId());
+            assertEquals(users.get(0).getName(), user1.getName());
+            assertEquals(users.get(0).getEmail(), user1.getEmail());
+            assertEquals(users.get(2).getId(), user3.getId());
+            assertEquals(users.get(2).getName(), user3.getName());
+            assertEquals(users.get(2).getEmail(), user3.getEmail());
         User user = userRepository.findById(2).get();
-            assertEquals(user.getId(), 2);
-            assertEquals(user.getName(), "User2");
-            assertEquals(user.getEmail(), "User2@mail.ru");
+            assertEquals(user.getId(), user2.getId());
+            assertEquals(user.getName(), user2.getName());
+            assertEquals(user.getEmail(), user2.getEmail());
         userRepository.delete(userRepository.findById(1).get());
             assertTrue(userRepository.findById(1).isEmpty());
             assertEquals(userRepository.findAll().size(), 2);
