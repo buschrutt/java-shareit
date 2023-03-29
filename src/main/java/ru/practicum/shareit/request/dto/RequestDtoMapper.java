@@ -1,8 +1,10 @@
 package ru.practicum.shareit.request.dto;
 
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.model.Request;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class RequestDtoMapper {
 
@@ -14,12 +16,13 @@ public class RequestDtoMapper {
                 .build();
     }
 
-    public static RequestDto addRequestToDto(Request request) {
+    public static RequestDto addRequestToDto(Request request, List<Item> items) {
         return RequestDto.builder()
                 .id(request.getId())
                 .requesterId(request.getId())
                 .description(request.getDescription())
                 .created(request.getCreated())
+                .items(items)
                 .build();
 
     }

@@ -35,7 +35,7 @@ public class RequestController {
     }
 
     @GetMapping("/all")
-    public List<RequestDto> findAllRequests(@RequestHeader(value = sharerId) Integer userId, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) {
+    public List<RequestDto> findAllRequests(@RequestHeader(value = sharerId) Integer userId, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) throws ValidationException {
         return requestService.findAllRequests(from, size, userId);
     }
 

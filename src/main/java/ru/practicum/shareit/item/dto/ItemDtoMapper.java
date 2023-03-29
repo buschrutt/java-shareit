@@ -15,19 +15,20 @@ public class ItemDtoMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .isAvailable(item.getAvailable())
+                .requestId(item.getRequestId())
                 .build();
     }
 
     public static ItemDto toItemWithBookingsAndCommentDtos(Item item, List<CommentDto> itemComments, LastOrNextBookingDto nextBookingDto, LastOrNextBookingDto lastBookingDto) {
-        ItemDto itemDto = ItemDto.builder()
+        return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .isAvailable(item.getAvailable())
                 .lastBooking(lastBookingDto)
                 .nextBooking(nextBookingDto)
+                .comments(itemComments)
+                .requestId(item.getRequestId())
                 .build();
-        itemDto.setComments(itemComments);
-        return itemDto;
     }
 }

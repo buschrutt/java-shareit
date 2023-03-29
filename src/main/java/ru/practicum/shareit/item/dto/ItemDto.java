@@ -20,7 +20,7 @@ public class ItemDto {
     String description;
     boolean isAvailable;
     int ownerId;
-    String requestLink; // if was created by user request - holds the link to that request
+    Integer requestId; // if was created by user request - holds the link to that request
     LastOrNextBookingDto lastBooking;
     LastOrNextBookingDto nextBooking;
     List<CommentDto> comments;

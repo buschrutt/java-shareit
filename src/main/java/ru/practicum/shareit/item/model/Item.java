@@ -35,5 +35,5 @@ public class Item {
     Integer ownerId;
 
     @Column(name = "request_id")
-    Integer request; // if was created by user request - holds the link to that request
+    Integer requestId; // if was created by user request - holds the link to that request
 }

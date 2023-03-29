@@ -13,7 +13,7 @@ public interface RequestService {
 
     List<RequestDto> findUserRequests(Integer userId) throws NotFoundException;
 
-    List<RequestDto> findAllRequests(Integer from, Integer size, Integer userId);
+    List<RequestDto> findAllRequests(Integer from, Integer size, Integer userId) throws ValidationException;
 
     RequestDto findRequestById(Integer userId, Integer requestId) throws NotFoundException;
 

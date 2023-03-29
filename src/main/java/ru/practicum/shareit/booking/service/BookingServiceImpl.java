@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoMapper;
@@ -84,7 +86,8 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("findAllUserBookings: ValidationException--");
         }
         List<BookingDto> bookingDtoList = new ArrayList<>();
-        List<Booking> bookings = bookingRepository.findBookingsByBookerOrderByStartDesc(userId);
+        Pageable pageable = PageRequest.of(from / size, size);
+        List<Booking> bookings = bookingRepository.findBookingsByBookerOrderByStartDesc(userId, pageable);
         for (Booking booking : bookings) {
             bookingDtoAdding(state, bookingDtoList, booking);
         }
@@ -105,7 +108,8 @@ public class BookingServiceImpl implements BookingService {
         for (Item item : items) {
             itemIds.add(item.getId());
         }
-        List<Booking> bookings = bookingRepository.findBookingsByItemIdInOrderByStartDesc(itemIds);
+        Pageable pageable = PageRequest.of(from / size, size);
+        List<Booking> bookings = bookingRepository.findBookingsByItemIdInOrderByStartDesc(itemIds, pageable);
         for (Booking booking : bookings) {
             bookingDtoAdding(state, bookingDtoList, booking);
         }
