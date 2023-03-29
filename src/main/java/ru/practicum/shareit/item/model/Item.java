@@ -1,8 +1,6 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.PackagePrivate;
 
 import javax.persistence.*;
@@ -12,11 +10,14 @@ import javax.persistence.*;
  */
 
 @Entity
+@Builder
 @Table(name = "items")
 @Getter
 @Setter
 @ToString
 @PackagePrivate
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
