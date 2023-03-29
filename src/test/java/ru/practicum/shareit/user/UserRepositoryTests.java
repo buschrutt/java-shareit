@@ -23,19 +23,19 @@ public class UserRepositoryTests {
 
     @BeforeEach
     void beforeEach() {
-        userRepository.deleteAll();
-        userRepository.save(User.builder().id(1).name("User1").email("User1@mail.ru").build());
-        userRepository.save(User.builder().id(2).name("User2").email("User2@mail.ru").build());
-        userRepository.save(User.builder().id(3).name("User3").email("User3@mail.ru").build());
+
     }
 
     @AfterEach
     void afterEach() {
-        userRepository.deleteAll();
+
     }
 
     @Test
     void userRepositoryTest() {
+        userRepository.save(User.builder().id(1).name("User1").email("User1@mail.ru").build());
+        userRepository.save(User.builder().id(2).name("User2").email("User2@mail.ru").build());
+        userRepository.save(User.builder().id(3).name("User3").email("User3@mail.ru").build());
         List<User> users = userRepository.findAll();
             assertEquals(users.size(), 3);
             assertEquals(users.get(0).getId(), 1);
@@ -51,6 +51,7 @@ public class UserRepositoryTests {
         userRepository.delete(userRepository.findById(1).get());
             assertTrue(userRepository.findById(1).isEmpty());
             assertEquals(userRepository.findAll().size(), 2);
+        userRepository.deleteAll();
     }
 
 }
