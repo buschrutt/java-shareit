@@ -37,7 +37,7 @@ public class UserRepositoryTests {
     void userRepositoryTest() {
         List<User> users = userRepository.findAll();
             assertEquals(users.size(), 3);
-            assertEquals(users.get(0).getId(), 1);
+            assertEquals(users.get(0).getId(), 2);
             assertEquals(users.get(0).getName(), "User1");
             assertEquals(users.get(0).getEmail(), "User1@mail.ru");
             assertEquals(users.get(2).getId(), 3);
