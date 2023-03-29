@@ -3,7 +3,7 @@ package ru.practicum.shareit.item.dto;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.item.model.Comment;
 
-// mapper
+// mapper checkup
 @RequiredArgsConstructor
 public class CommentDtoMapper {
 
