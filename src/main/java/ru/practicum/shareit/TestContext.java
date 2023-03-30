@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TestContext {
 
-     static public void createContext(UserRepository userRepository, RequestRepository requestRepository,
+     public static void createContext(UserRepository userRepository, RequestRepository requestRepository,
                                       ItemRepository itemRepository, CommentRepository commentRepository,
                                       BookingRepository bookingRepository) {
          userRepository.save(User.builder()
@@ -114,7 +114,7 @@ public class TestContext {
                  .build());
     }
 
-    static public void deleteContext(UserRepository userRepository, RequestRepository requestRepository,
+     public static void deleteContext(UserRepository userRepository, RequestRepository requestRepository,
                                      ItemRepository itemRepository, CommentRepository commentRepository,
                                      BookingRepository bookingRepository) {
         userRepository.deleteAll();

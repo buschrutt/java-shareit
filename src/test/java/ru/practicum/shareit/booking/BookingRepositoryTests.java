@@ -54,22 +54,22 @@ public class BookingRepositoryTests {
     }
 
     @Test
-    void BookingsByBookerTest() {
+    void bookingsByBookerTest() {
 
     }
 
     @Test
-    void BookingsByStatusAndItemIdTest() {
+    void bookingsByStatusAndItemIdTest() {
 
     }
 
     @Test
-    void BookingsByStatusAndBookerAndItemIdTest() {
+    void bookingsByStatusAndBookerAndItemIdTest() {
 
     }
 
     @Test
-    void BookingsByBookingsByItemIdTest() {
+    void bookingsByBookingsByItemIdTest() {
 
     }
 
