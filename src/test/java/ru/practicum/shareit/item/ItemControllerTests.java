@@ -92,12 +92,12 @@ public class ItemControllerTests {
     @SneakyThrows
     @Test
     void getAllUserItemsControllerTest() {
-        List<ItemDto> ItemDtoList = new ArrayList<>();
-        ItemDtoList.add(itemDto);
-        ItemDtoList.add(itemDto0);
-        when(itemController.getAllUserItems(any())).thenReturn(ItemDtoList);
+        List<ItemDto> itemDtoList = new ArrayList<>();
+        itemDtoList.add(itemDto);
+        itemDtoList.add(itemDto0);
+        when(itemController.getAllUserItems(any())).thenReturn(itemDtoList);
         mvc.perform(get("/items")
-                        .content(mapper.writeValueAsString(ItemDtoList))
+                        .content(mapper.writeValueAsString(itemDtoList))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(header, 1))
                 .andExpect(status().isOk())
@@ -135,13 +135,13 @@ public class ItemControllerTests {
     void getItemsSearchedControllerTest() {
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("text", "description");
-        List<ItemDto> ItemDtoList = new ArrayList<>();
-        ItemDtoList.add(itemDto);
-        ItemDtoList.add(itemDto0);
-        when(itemController.getItemsSearched(any())).thenReturn(ItemDtoList);
+        List<ItemDto> itemDtoList = new ArrayList<>();
+        itemDtoList.add(itemDto);
+        itemDtoList.add(itemDto0);
+        when(itemController.getItemsSearched(any())).thenReturn(itemDtoList);
         mvc.perform(get("/items/search")
                         .params(requestParams)
-                        .content(mapper.writeValueAsString(ItemDtoList))
+                        .content(mapper.writeValueAsString(itemDtoList))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(header, 1))
                 .andExpect(status().isOk())
