@@ -17,7 +17,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDto addUser(User user) throws ValidationException {
+    public UserDto addUser(UserDto userDto) throws ValidationException {
+        User user = UserDtoMapper.toUser(userDto);
         emailValidation(user.getEmail());
         return UserDtoMapper.toUserDto(userRepository.save(user));
     }
