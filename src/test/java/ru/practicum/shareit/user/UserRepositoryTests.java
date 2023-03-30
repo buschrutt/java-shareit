@@ -8,6 +8,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.practicum.shareit.TestContext;
+import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -25,28 +30,26 @@ public class UserRepositoryTests {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    RequestRepository requestRepository;
+
+    @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
+    BookingRepository bookingRepository;
+
     @BeforeEach
     void beforeEach() {
-        User user1 = User.builder()
-                .name("User1")
-                .email("User1@mail.ru")
-                .build();
-        User user2 = User.builder()
-                .name("User2")
-                .email("User2@mail.ru")
-                .build();
-        User user3 = User.builder()
-                .name("User3")
-                .email("User3@mail.ru")
-                .build();
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
+        TestContext.createContext(userRepository, requestRepository, itemRepository, commentRepository, bookingRepository);
     }
 
     @AfterEach
     void afterEach() {
-        userRepository.deleteAll();
+        TestContext.deleteContext(userRepository, requestRepository, itemRepository, commentRepository, bookingRepository);
     }
 
     @Test
