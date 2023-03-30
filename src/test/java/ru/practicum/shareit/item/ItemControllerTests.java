@@ -75,6 +75,8 @@ public class ItemControllerTests {
     @SneakyThrows
     @Test
     void updateItemControllerTest() {
+        LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+        requestParams.add("from", "0");
         Integer itemId = 1;
         when(itemController.updateItem(any(), any(), any())).thenReturn(itemDto);
         mvc.perform(patch("/items/{itemId}", itemId)
