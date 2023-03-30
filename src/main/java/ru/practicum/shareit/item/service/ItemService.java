@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface ItemService {
 
-    ItemDto addItem(Item item, Integer ownerId) throws ValidationException, NotFoundException;
+    ItemDto addItem(ItemDto itemDto, Integer ownerId) throws ValidationException, NotFoundException;
 
-    ItemDto updateItem(Integer itemId, Item item, Integer ownerId) throws ValidationException, NotFoundException;
+    ItemDto updateItem(Integer itemId, ItemDto itemDto, Integer ownerId) throws ValidationException, NotFoundException;
 
     List<ItemDto> getAllUserItems(Integer ownerId);
 
@@ -21,6 +21,6 @@ public interface ItemService {
 
     List<ItemDto> getItemsSearched(String text);
 
-    CommentDto addComment(Comment comment, Integer userId, Integer itemId) throws ValidationException;
+    CommentDto addComment(CommentDto commentDto, Integer userId, Integer itemId) throws ValidationException;
 
 }

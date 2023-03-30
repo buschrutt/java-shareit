@@ -5,8 +5,6 @@ import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
 import java.util.List;
@@ -27,14 +25,14 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto addItem(@RequestHeader(value = sharerId) Integer ownerId, @RequestBody Item item) throws ValidationException, NotFoundException {
-        return itemService.addItem(item, ownerId);
+    public ItemDto addItem(@RequestHeader(value = sharerId) Integer ownerId, @RequestBody ItemDto itemDto) throws ValidationException, NotFoundException {
+        return itemService.addItem(itemDto, ownerId);
     }
 
 
     @PatchMapping(epItemId)
-    public ItemDto updateItem(@RequestHeader(value = sharerId) Integer ownerId, @PathVariable Integer itemId, @RequestBody Item item) throws NotFoundException {
-        return itemService.updateItem(itemId, item, ownerId);
+    public ItemDto updateItem(@RequestHeader(value = sharerId) Integer ownerId, @PathVariable Integer itemId, @RequestBody ItemDto itemDto) throws NotFoundException {
+        return itemService.updateItem(itemId, itemDto, ownerId);
     }
 
     @GetMapping
@@ -53,8 +51,8 @@ public class ItemController {
     }
 
     @PostMapping(epItemId + "/comment")
-    public CommentDto addComment(@RequestHeader(value = sharerId) Integer userId, @RequestBody Comment comment, @PathVariable Integer itemId) throws ValidationException {
-        return itemService.addComment(comment, userId, itemId);
+    public CommentDto addComment(@RequestHeader(value = sharerId) Integer userId, @RequestBody CommentDto commentDto, @PathVariable Integer itemId) throws ValidationException {
+        return itemService.addComment(commentDto, userId, itemId);
     }
 
 }

@@ -18,7 +18,7 @@ public class ItemDto {
     int id;
     String name;
     String description;
-    boolean isAvailable;
+    Boolean available;
     int ownerId;
     Integer requestId; // if was created by user request - holds the link to that request
     LastOrNextBookingDto lastBooking;

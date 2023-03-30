@@ -30,7 +30,7 @@ public class ItemMapperTests {
                 .id(1)
                 .name("Item_Name")
                 .description("Some_Item")
-                .isAvailable(true)
+                .available(true)
                 .requestId(3)
                 .build();
         assertEquals(ItemDtoMapper.toItemDto(item).toString(), itemDto.toString());
@@ -77,7 +77,7 @@ public class ItemMapperTests {
                 .id(1)
                 .name("Item_Name")
                 .description("Some_Item")
-                .isAvailable(true)
+                .available(true)
                 .lastBooking(lastBookingDto)
                 .nextBooking(nextBookingDto)
                 .comments(itemComments)

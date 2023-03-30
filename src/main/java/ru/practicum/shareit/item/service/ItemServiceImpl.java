@@ -32,14 +32,15 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
 
     @Override
-    public ItemDto addItem(Item item, Integer ownerId) throws ValidationException, NotFoundException {
-        item.setOwnerId(ownerId);
+    public ItemDto addItem(ItemDto itemDto, Integer ownerId) throws ValidationException, NotFoundException {
+        Item item = ItemDtoMapper.toItem(itemDto, ownerId);
         itemValidation(item);
         return ItemDtoMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
-    public ItemDto updateItem(Integer itemId, Item item, Integer ownerId) throws NotFoundException {
+    public ItemDto updateItem(Integer itemId, ItemDto itemDto, Integer ownerId) throws NotFoundException {
+        Item item = ItemDtoMapper.toItem(itemDto, ownerId);
         Item newItem;
         if (!userRepository.existsById(ownerId)) {
             throw new NotFoundException("updateItem: No User Found--");
@@ -108,7 +109,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentDto addComment(Comment comment, Integer userId, Integer itemId) throws ValidationException {
+    public CommentDto addComment(CommentDto commentDto, Integer userId, Integer itemId) throws ValidationException {
+        Comment comment = CommentDtoMapper.toComment(commentDto, userId);
         commentValidation(comment, userId, itemId);
         comment.setAuthorName(userId);
         comment.setItem(itemId);
