@@ -7,7 +7,6 @@ import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class UserController {
     final UserService userService;
     final String epUserId = "/{userId}";
 
-    public UserController(UserServiceImpl userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -31,8 +30,8 @@ public class UserController {
     }
 
     @PatchMapping(epUserId)
-    public UserDto updateUser(@PathVariable int userId, @RequestBody User user) throws ValidationException, NotFoundException, ConflictException {
-        return userService.updateUser(userId, user);
+    public UserDto updateUser(@PathVariable Integer userId, @RequestBody UserDto userDto) throws ValidationException, NotFoundException, ConflictException {
+        return userService.updateUser(userId, userDto);
     }
 
     @GetMapping

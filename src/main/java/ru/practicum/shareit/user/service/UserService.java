@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserService {
     UserDto addUser(UserDto userDto) throws ValidationException, ConflictException;
 
-    UserDto updateUser(int userId, User user) throws ValidationException, ConflictException, NotFoundException;
+    UserDto updateUser(Integer userId, UserDto userDto) throws ValidationException, ConflictException, NotFoundException;
 
     List<UserDto> findAllUsers();
 

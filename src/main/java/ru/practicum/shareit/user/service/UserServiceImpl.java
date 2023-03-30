@@ -24,7 +24,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(int userId, User user) throws ValidationException, NotFoundException {
+    public UserDto updateUser(Integer userId, UserDto userDto) throws ValidationException, NotFoundException {
+        User user = UserDtoMapper.toUser(userDto);
         User newUser;
         if (userRepository.findById(userId).isPresent()) {
             newUser = userRepository.findById(userId).get();
