@@ -171,10 +171,10 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("requestValidation: Null--");
         }
         if (request.getEnd().isBefore(LocalDateTime.now()) || request.getStart().isBefore(LocalDateTime.now())) {
-            throw new ValidationException("requestValidation: End or Start in a Past--");
+            throw new ValidationException("re--questValidation: End or Start in a Past--");
         }
         if (request.getEnd().isBefore(request.getStart()) || request.getEnd().isEqual(request.getStart())) {
-            throw new ValidationException("requestValidation: End is Before or the Same as Start--");
+            throw new ValidationException("request--Validation: End is Before or the Same as Start--");
         }
     }
 }

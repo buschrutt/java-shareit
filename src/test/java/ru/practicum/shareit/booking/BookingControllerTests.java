@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -31,7 +32,7 @@ public class BookingControllerTests {
     @Autowired
     ObjectMapper mapper;
     @MockBean
-    BookingController bookingController;
+    BookingService bookingService;
     @Autowired
     private MockMvc mvc;
     final String header = "X-Sharer-User-Id";
@@ -58,7 +59,7 @@ public class BookingControllerTests {
     @SneakyThrows
     @Test
     void addBookingControllerTest() {
-        when(bookingController.addBooking(any(), any())).thenReturn(bookingDto);
+        when(bookingService.addBooking(any(), any())).thenReturn(bookingDto);
         mvc.perform(post("/bookings")
                         .content(mapper.writeValueAsString(bookingDto))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -77,7 +78,7 @@ public class BookingControllerTests {
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("approved", "true");
         Integer bookingId = 1;
-        when(bookingController.bookingApproval(any(), any(), any())).thenReturn(bookingDto);
+        when(bookingService.bookingApproval(any(), any(), any())).thenReturn(bookingDto);
         mvc.perform(patch("/bookings/{bookingId}", bookingId)
                         .params(requestParams)
                         .content(mapper.writeValueAsString(bookingDto))
@@ -95,7 +96,7 @@ public class BookingControllerTests {
     @Test
     void findBookingByIdControllerTest() {
         Integer bookingId = 1;
-        when(bookingController.findBookingById(any(), any())).thenReturn(bookingDto);
+        when(bookingService.findBookingById(any(), any())).thenReturn(bookingDto);
         mvc.perform(get("/bookings/{bookingId}", bookingId)
                         .content(mapper.writeValueAsString(bookingDto))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -118,7 +119,7 @@ public class BookingControllerTests {
         List<BookingDto> bookingDtoList = new ArrayList<>();
         bookingDtoList.add(bookingDto);
         Integer bookingId = 1;
-        when(bookingController.findAllUserBookings(any(), any(), any(), any())).thenReturn(bookingDtoList);
+        when(bookingService.findAllUserBookings(any(), any(), any(), any())).thenReturn(bookingDtoList);
         mvc.perform(get("/bookings", bookingId)
                         .params(requestParams)
                         .content(mapper.writeValueAsString(bookingDto))
@@ -141,7 +142,7 @@ public class BookingControllerTests {
         requestParams.add("size", "10");
         List<BookingDto> bookingDtoList = new ArrayList<>();
         bookingDtoList.add(bookingDto);
-        when(bookingController.findAllOwnerBookings(any(), any(), any(), any())).thenReturn(bookingDtoList);
+        when(bookingService.findAllOwnerBookings(any(), any(), any(), any())).thenReturn(bookingDtoList);
         mvc.perform(get("/bookings/owner")
                         .params(requestParams)
                         .content(mapper.writeValueAsString(bookingDto))

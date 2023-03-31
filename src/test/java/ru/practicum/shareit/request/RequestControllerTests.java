@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.service.RequestService;
+
 import static org.hamcrest.Matchers.is;
 
 import java.time.LocalDateTime;
@@ -29,7 +31,7 @@ public class RequestControllerTests {
     @Autowired
     ObjectMapper mapper;
     @MockBean
-    RequestController requestController;
+    RequestService requestService;
     @Autowired
     private MockMvc mvc;
     final String header = "X-Sharer-User-Id";
@@ -48,7 +50,7 @@ public class RequestControllerTests {
     @SneakyThrows
     @Test
     void addRequestTest() {
-        when(requestController.addRequest(any(), any())).thenReturn(requestDto);
+        when(requestService.addRequest(any(), any())).thenReturn(requestDto);
         mvc.perform(post("/requests")
                 .content(mapper.writeValueAsString(requestDto))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -63,7 +65,7 @@ public class RequestControllerTests {
     void findUserRequestsTest() {
         List<RequestDto> requestDtoList = new ArrayList<>();
         requestDtoList.add(requestDto);
-        when(requestController.findUserRequests(anyInt())).thenReturn(requestDtoList);
+        when(requestService.findUserRequests(anyInt())).thenReturn(requestDtoList);
         mvc.perform(get("/requests")
                         .content(mapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -82,7 +84,7 @@ public class RequestControllerTests {
         List<RequestDto> requestDtoList = new ArrayList<>();
         requestDtoList.add(requestDto);
         requestDtoList.add(requestDto0);
-        when(requestController.findAllRequests(anyInt(), anyInt(), anyInt())).thenReturn(requestDtoList);
+        when(requestService.findAllRequests(anyInt(), anyInt(), anyInt())).thenReturn(requestDtoList);
         mvc.perform(get("/requests/all")
                         .params(requestParams)
                         .content(mapper.writeValueAsString(requestDto))
@@ -99,7 +101,7 @@ public class RequestControllerTests {
     @Test
     void findRequestByIdTest() {
         Integer requestId = 1;
-        when(requestController.findRequestById(any(), any())).thenReturn(requestDto);
+        when(requestService.findRequestById(any(), any())).thenReturn(requestDto);
         mvc.perform(get("/requests/{requestId}", requestId)
                         .content(mapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON)

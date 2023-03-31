@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import ru.practicum.shareit.error.NotFoundException;
+import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -19,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +44,16 @@ class UserServiceTests {
             .name("John")
             .email("john.doe@mail.com")
             .build();
+    private final UserDto badUserDto = UserDto.builder()
+            .id(1)
+            .name("John")
+            .build();
+    private final UserDto badPatternUserDto = UserDto.builder()
+            .id(1)
+            .name("John")
+            .email("john.mail.com")
+            .build();
+
 
     @Test
     @SneakyThrows
@@ -50,11 +63,45 @@ class UserServiceTests {
     }
 
     @Test
+    void addBadUserUnitTest() {
+        when(userRepository.save(any())).thenReturn(user);
+        try {
+            userServiceImpl.addUser(badUserDto);
+            fail();
+        } catch (ValidationException thrown) {
+            assertTrue(thrown.getMessage().contentEquals("userValidation: Email Is Empty--"));
+        }
+    }
+
+    @Test
+    void addBadPatternUserUnitTest() {
+        when(userRepository.save(any())).thenReturn(user);
+        try {
+            userServiceImpl.addUser(badPatternUserDto);
+            fail();
+        } catch (ValidationException thrown) {
+            assertTrue(thrown.getMessage().contentEquals("userValidation: Email Validation Error--"));
+        }
+    }
+
+    @Test
     @SneakyThrows
     void updateUserUnitTest() {
         when(userRepository.save(any())).thenReturn(user);
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
         assertEquals(userServiceImpl.updateUser(1, userDto).toString(), userDto.toString());
+    }
+
+    @Test
+    void updateMissingUserUnitTest() throws ValidationException {
+        when(userRepository.save(any())).thenReturn(user);
+        when(userRepository.findById(any())).thenReturn(Optional.empty());
+        try {
+            userServiceImpl.updateUser(1, userDto);
+            fail();
+        } catch (NotFoundException thrown) {
+            assertTrue(thrown.getMessage().contentEquals("getUserById: No User Found--"));
+        }
     }
 
     @Test

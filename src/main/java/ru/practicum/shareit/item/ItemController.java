@@ -5,7 +5,7 @@ import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.service.ItemServiceImpl;
+import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
@@ -16,11 +16,11 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
 
-    final ItemServiceImpl itemService;
+    final ItemService itemService;
     final String epItemId = "/{itemId}";
     final String sharerId = "X-Sharer-User-Id";
 
-    public ItemController(ItemServiceImpl itemService) {
+    public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
 
@@ -31,7 +31,7 @@ public class ItemController {
 
 
     @PatchMapping(epItemId)
-    public ItemDto updateItem(@RequestHeader(value = sharerId) Integer ownerId, @PathVariable Integer itemId, @RequestBody ItemDto itemDto) throws NotFoundException {
+    public ItemDto updateItem(@RequestHeader(value = sharerId) Integer ownerId, @PathVariable Integer itemId, @RequestBody ItemDto itemDto) throws NotFoundException, ValidationException {
         return itemService.updateItem(itemId, itemDto, ownerId);
     }
 

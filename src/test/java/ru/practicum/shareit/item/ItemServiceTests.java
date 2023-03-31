@@ -3,7 +3,6 @@ package ru.practicum.shareit.item;
 import lombok.AccessLevel;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -90,10 +89,6 @@ public class ItemServiceTests {
             .status("WAITING")
             .build();
 
-    @BeforeEach
-    void beforeEach() {
-
-    }
 
     @Test
     @SneakyThrows

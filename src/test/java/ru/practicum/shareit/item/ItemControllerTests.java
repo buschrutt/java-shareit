@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.service.ItemService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class ItemControllerTests {
     @Autowired
     ObjectMapper mapper;
     @MockBean
-    ItemController itemController;
+    ItemService itemService;
     @Autowired
     private MockMvc mvc;
     final String header = "X-Sharer-User-Id";
@@ -59,7 +60,7 @@ public class ItemControllerTests {
     @SneakyThrows
     @Test
     void addItemControllerTest() {
-        when(itemController.addItem(any(), any())).thenReturn(itemDto);
+        when(itemService.addItem(any(), any())).thenReturn(itemDto);
         mvc.perform(post("/items")
                         .content(mapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,8 +79,9 @@ public class ItemControllerTests {
         LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
         requestParams.add("from", "0");
         Integer itemId = 1;
-        when(itemController.updateItem(any(), any(), any())).thenReturn(itemDto);
+        when(itemService.updateItem(any(), any(), any())).thenReturn(itemDto);
         mvc.perform(patch("/items/{itemId}", itemId)
+                        .params(requestParams)
                         .content(mapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(header, 1))
@@ -97,7 +99,7 @@ public class ItemControllerTests {
         List<ItemDto> itemDtoList = new ArrayList<>();
         itemDtoList.add(itemDto);
         itemDtoList.add(itemDto0);
-        when(itemController.getAllUserItems(any())).thenReturn(itemDtoList);
+        when(itemService.getAllUserItems(any())).thenReturn(itemDtoList);
         mvc.perform(get("/items")
                         .content(mapper.writeValueAsString(itemDtoList))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -119,7 +121,7 @@ public class ItemControllerTests {
     @Test
     void getItemByIdControllerTest() {
         Integer sharerId = 1;
-        when(itemController.getItemById(any(), any())).thenReturn(itemDto);
+        when(itemService.getItemById(any(), any())).thenReturn(itemDto);
         mvc.perform(get("/items/{sharerId}", sharerId)
                         .content(mapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -140,7 +142,7 @@ public class ItemControllerTests {
         List<ItemDto> itemDtoList = new ArrayList<>();
         itemDtoList.add(itemDto);
         itemDtoList.add(itemDto0);
-        when(itemController.getItemsSearched(any())).thenReturn(itemDtoList);
+        when(itemService.getItemsSearched(any())).thenReturn(itemDtoList);
         mvc.perform(get("/items/search")
                         .params(requestParams)
                         .content(mapper.writeValueAsString(itemDtoList))
@@ -163,7 +165,7 @@ public class ItemControllerTests {
     @Test
     void addCommentControllerTest() {
         Integer itemId = 1;
-        when(itemController.addComment(any(), any(), any())).thenReturn(commentDto);
+        when(itemService.addComment(any(), any(), any())).thenReturn(commentDto);
         mvc.perform(post("/items/{itemId}/comment", itemId)
                         .content(mapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON)
