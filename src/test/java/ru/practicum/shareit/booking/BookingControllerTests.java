@@ -13,6 +13,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public class BookingControllerTests {
     ObjectMapper mapper;
     @MockBean
     BookingService bookingService;
+    @MockBean
+    UserRepository userRepository;
     @Autowired
     private MockMvc mvc;
     final String header = "X-Sharer-User-Id";
@@ -120,6 +123,7 @@ public class BookingControllerTests {
         bookingDtoList.add(bookingDto);
         Integer bookingId = 1;
         when(bookingService.findAllUserBookings(any(), any(), any(), any())).thenReturn(bookingDtoList);
+        when(userRepository.existsById(any())).thenReturn(true);
         mvc.perform(get("/bookings", bookingId)
                         .params(requestParams)
                         .content(mapper.writeValueAsString(bookingDto))
@@ -131,6 +135,13 @@ public class BookingControllerTests {
                 .andExpect(jsonPath("$[0].item.description", is(bookingDto.getItem().getDescription())))
                 .andExpect(jsonPath("$[0].booker.name", is(bookingDto.getBooker().getName())))
                 .andExpect(jsonPath("$[0].booker.email", is(bookingDto.getBooker().getEmail())));
+        when(userRepository.existsById(any())).thenReturn(false);
+        mvc.perform(get("/bookings/owner")
+                        .params(requestParams)
+                        .content(mapper.writeValueAsString(bookingDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(header, 1))
+                .andExpect(status().is4xxClientError());
     }
 
     @SneakyThrows
@@ -143,6 +154,7 @@ public class BookingControllerTests {
         List<BookingDto> bookingDtoList = new ArrayList<>();
         bookingDtoList.add(bookingDto);
         when(bookingService.findAllOwnerBookings(any(), any(), any(), any())).thenReturn(bookingDtoList);
+        when(userRepository.existsById(any())).thenReturn(true);
         mvc.perform(get("/bookings/owner")
                         .params(requestParams)
                         .content(mapper.writeValueAsString(bookingDto))
@@ -154,6 +166,13 @@ public class BookingControllerTests {
                 .andExpect(jsonPath("$[0].item.description", is(bookingDto.getItem().getDescription())))
                 .andExpect(jsonPath("$[0].booker.name", is(bookingDto.getBooker().getName())))
                 .andExpect(jsonPath("$[0].booker.email", is(bookingDto.getBooker().getEmail())));
+        when(userRepository.existsById(any())).thenReturn(false);
+        mvc.perform(get("/bookings/owner")
+                        .params(requestParams)
+                        .content(mapper.writeValueAsString(bookingDto))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(header, 1))
+                .andExpect(status().is4xxClientError());
     }
 
 }

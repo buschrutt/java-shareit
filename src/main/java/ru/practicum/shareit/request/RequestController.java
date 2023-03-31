@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.request.service.RequestService;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.List;
 
@@ -18,29 +20,48 @@ import java.util.List;
 public class RequestController {
 
     final RequestService requestService;
+    final UserRepository userRepository;
+    final RequestRepository requestRepository;
     final String sharerId = "X-Sharer-User-Id";
 
-    public RequestController(RequestService requestService) {
+    public RequestController(RequestService requestService, UserRepository userRepository, RequestRepository requestRepository) {
         this.requestService = requestService;
+        this.userRepository = userRepository;
+        this.requestRepository = requestRepository;
     }
 
     @PostMapping
     public RequestDto addRequest(@RequestHeader(value = sharerId) Integer userId, @RequestBody RequestDto requestDto) throws ValidationException, NotFoundException {
+        if (requestDto.getDescription() == null) {
+            throw new ValidationException("addRequest: ValidationException--");
+        }
+        if (userRepository.findById(userId).isEmpty()) {
+            throw new NotFoundException("addRequest: NotFoundException--");
+        }
         return requestService.addRequest(userId, requestDto);
     }
 
     @GetMapping
     public List<RequestDto> findUserRequests(@RequestHeader(value = sharerId) Integer userId) throws NotFoundException {
+        if (userRepository.findById(userId).isEmpty()) {
+            throw new NotFoundException("findUserRequests: NotFoundException--");
+        }
         return requestService.findUserRequests(userId);
     }
 
     @GetMapping("/all")
     public List<RequestDto> findAllRequests(@RequestHeader(value = sharerId) Integer userId, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) throws ValidationException {
+        if (size == 0 || from < 0) {
+            throw new ValidationException("findAllRequests: ValidationException--");
+        }
         return requestService.findAllRequests(from, size, userId);
     }
 
     @GetMapping("/{requestId}")
     public RequestDto findRequestById(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer requestId) throws NotFoundException {
+        if (requestRepository.findById(requestId).isEmpty() || userRepository.findById(userId).isEmpty()) {
+            throw new NotFoundException("findRequestById: NotFoundException--");
+        }
         return requestService.findRequestById(userId, requestId);
     }
 

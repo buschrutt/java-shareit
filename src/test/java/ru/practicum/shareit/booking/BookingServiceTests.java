@@ -138,42 +138,6 @@ public class BookingServiceTests {
         }
     }
 
-
-
-    @Test
-    @SneakyThrows
-    void findAllUserBookingsNoUserFoundUnitTest() {
-        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
-        when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
-        List<Booking> bookingList = new ArrayList<>();
-        bookingList.add(booking);
-        when(userRepository.existsById(any())).thenReturn(false);
-        when(bookingRepository.findBookingsByBookerOrderByStartDesc(any(), any())).thenReturn(bookingList);
-        try {
-            bookingServiceImpl.findAllUserBookings(2, "ALL", 0, 5);
-            fail();
-        } catch (NotFoundException thrown) {
-            assertTrue(true);
-        }
-    }
-
-    @Test
-    @SneakyThrows
-    void findAllUserBookingsBadRequestUnitTest() {
-        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
-        when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
-        List<Booking> bookingList = new ArrayList<>();
-        bookingList.add(booking);
-        when(userRepository.existsById(any())).thenReturn(true);
-        when(bookingRepository.findBookingsByBookerOrderByStartDesc(any(), any())).thenReturn(bookingList);
-        try {
-            bookingServiceImpl.findAllUserBookings(2, "ALL", -1, 5);
-            fail();
-        } catch (ValidationException thrown) {
-            assertTrue(true);
-        }
-    }
-
     @Test
     @SneakyThrows
     void findAllUserBookingsUnitTest() {

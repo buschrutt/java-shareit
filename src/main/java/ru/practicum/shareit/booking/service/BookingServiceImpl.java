@@ -79,12 +79,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> findAllUserBookings(Integer userId, String state, Integer from, Integer size) throws NotFoundException, ValidationException {
-        if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("findAllUserBookings: --NotFoundException--");
-        }
-        if (size <= 0 || from < 0) {
-            throw new ValidationException("findAllUserBookings: ValidationException--");
-        }
         List<BookingDto> bookingDtoList = new ArrayList<>();
         Pageable pageable = PageRequest.of(from / size, size);
         List<Booking> bookings = bookingRepository.findBookingsByBookerOrderByStartDesc(userId, pageable);
@@ -95,13 +89,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> findAllOwnerBookings(Integer ownerId, String state, Integer from, Integer size) throws NotFoundException, ValidationException {
-        if (!userRepository.existsById(ownerId)) {
-            throw new NotFoundException("findAllUserBookings: No User Found--");
-        }
-        if (size <= 0 || from < 0) {
-            throw new ValidationException("findAllOwnerBookings: ValidationException--");
-        }
+    public List<BookingDto> findAllOwnerBookings(Integer ownerId, String state, Integer from, Integer size) throws ValidationException {
         List<BookingDto> bookingDtoList = new ArrayList<>();
         List<Integer> itemIds = new ArrayList<>();
         List<Item> items = itemRepository.findItemsByOwnerId(ownerId);
