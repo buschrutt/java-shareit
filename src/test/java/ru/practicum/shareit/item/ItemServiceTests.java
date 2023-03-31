@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -108,9 +109,37 @@ public class ItemServiceTests {
         when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
         when(itemRepository.save(any())).thenReturn(item);
         itemDto.setId(1);
-        ItemDto itemDto0 = itemServiceImpl.addItem(itemDto, 2);
+        ItemDto itemDto0 = itemServiceImpl.updateItem(1, itemDto, 2);
         itemDto0.setOwnerId(2);
         assertEquals(itemDto0.toString(), itemDto.toString());
+    }
+
+    @Test
+    @SneakyThrows
+    void updateItemUserNotFoundUnitTest() {
+        when(userRepository.existsById(any())).thenReturn(false);
+        when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
+        when(itemRepository.save(any())).thenReturn(item);
+        try {
+            itemServiceImpl.updateItem(1, itemDto, 2);
+            fail();
+        } catch (NotFoundException thrown) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    @SneakyThrows
+    void updateItemNotFoundUnitTest() {
+        when(userRepository.existsById(any())).thenReturn(true);
+        when(itemRepository.findById(any())).thenReturn(Optional.empty());
+        when(itemRepository.save(any())).thenReturn(item);
+        try {
+            itemServiceImpl.updateItem(1, itemDto, 2);
+            fail();
+        } catch (NotFoundException thrown) {
+            assertTrue(true);
+        }
     }
 
     @Test

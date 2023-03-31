@@ -88,6 +88,15 @@ class UserServiceTests {
     @SneakyThrows
     void updateUserUnitTest() {
         when(userRepository.save(any())).thenReturn(user);
+        user.setEmail("john.doe1@mail.com");
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+        assertEquals(userServiceImpl.updateUser(1, userDto).toString(), userDto.toString());
+    }
+
+    @Test
+    @SneakyThrows
+    void updateUserEmailUnitTest() {
+        when(userRepository.save(any())).thenReturn(user);
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
         assertEquals(userServiceImpl.updateUser(1, userDto).toString(), userDto.toString());
     }
@@ -122,9 +131,33 @@ class UserServiceTests {
 
     @Test
     @SneakyThrows
+    void findUserByIdUserNotFoundTest() {
+        when(userRepository.findById(any())).thenReturn(Optional.empty());
+        try {
+            userServiceImpl.findUserById(1);
+            fail();
+        } catch (NotFoundException thrown) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    @SneakyThrows
     void deleteTest() {
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
         userServiceImpl.deleteUser(1);
+    }
+
+    @Test
+    @SneakyThrows
+    void deleteUserNotFoundTest() {
+        when(userRepository.findById(any())).thenReturn(Optional.empty());
+        try {
+            userServiceImpl.deleteUser(1);
+            fail();
+        } catch (NotFoundException thrown) {
+            assertTrue(true);
+        }
     }
 
 }

@@ -15,6 +15,8 @@ import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.service.BookingServiceImpl;
+import ru.practicum.shareit.error.NotFoundException;
+import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -96,6 +98,28 @@ public class BookingServiceTests {
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
         bookingDto.setStatus("APPROVED");
         assertEquals(bookingServiceImpl.bookingApproval(2, 1, true).toString(), bookingDto.toString());
+        bookingDto.setStatus("REJECTED");
+        try {
+            bookingServiceImpl.bookingApproval(2, 1, false);
+            fail();
+        } catch (ValidationException thrown) {
+            assertTrue(true);
+        }
+        bookingDto.setStatus("APPROVED");
+        when(userRepository.existsById(any())).thenReturn(false);
+        try {
+            bookingServiceImpl.bookingApproval(2, 1, true);
+            fail();
+        } catch (ValidationException thrown) {
+            assertTrue(true);
+        }
+        when(userRepository.existsById(any())).thenReturn(true);
+        try {
+            bookingServiceImpl.bookingApproval(2, 1, false);
+            fail();
+        } catch (ValidationException thrown) {
+            assertTrue(true);
+        }
     }
 
     @Test
@@ -105,6 +129,49 @@ public class BookingServiceTests {
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
         when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
         assertEquals(bookingServiceImpl.findBookingById(2, 1).toString(), bookingDto.toString());
+        when(bookingRepository.findById(any())).thenReturn(Optional.empty());
+        try {
+            bookingServiceImpl.findBookingById(2, 1);
+            fail();
+        } catch (NotFoundException thrown) {
+            assertTrue(true);
+        }
+    }
+
+
+
+    @Test
+    @SneakyThrows
+    void findAllUserBookingsNoUserFoundUnitTest() {
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+        when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
+        List<Booking> bookingList = new ArrayList<>();
+        bookingList.add(booking);
+        when(userRepository.existsById(any())).thenReturn(false);
+        when(bookingRepository.findBookingsByBookerOrderByStartDesc(any(), any())).thenReturn(bookingList);
+        try {
+            bookingServiceImpl.findAllUserBookings(2, "ALL", 0, 5);
+            fail();
+        } catch (NotFoundException thrown) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    @SneakyThrows
+    void findAllUserBookingsBadRequestUnitTest() {
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+        when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
+        List<Booking> bookingList = new ArrayList<>();
+        bookingList.add(booking);
+        when(userRepository.existsById(any())).thenReturn(true);
+        when(bookingRepository.findBookingsByBookerOrderByStartDesc(any(), any())).thenReturn(bookingList);
+        try {
+            bookingServiceImpl.findAllUserBookings(2, "ALL", -1, 5);
+            fail();
+        } catch (ValidationException thrown) {
+            assertTrue(true);
+        }
     }
 
     @Test
@@ -134,6 +201,23 @@ public class BookingServiceTests {
         when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
         List<BookingDto> bookingDtoList = bookingServiceImpl.findAllOwnerBookings(2, "ALL", 0, 5);
         assertEquals(bookingDtoList.get(0).toString(), bookingDto.toString());
+        bookingDtoList = bookingServiceImpl.findAllOwnerBookings(2, "CURRENT", 0, 5);
+        assertEquals(bookingDtoList.size(), 0);
+        bookingDtoList = bookingServiceImpl.findAllOwnerBookings(2, "PAST", 0, 5);
+        assertEquals(bookingDtoList.size(), 0);
+        bookingDtoList = bookingServiceImpl.findAllOwnerBookings(2, "FUTURE", 0, 5);
+        assertEquals(bookingDtoList.get(0).toString(), bookingDto.toString());
+        bookingDtoList = bookingServiceImpl.findAllOwnerBookings(2, "WAITING", 0, 5);
+        assertEquals(bookingDtoList.get(0).toString(), bookingDto.toString());
+        bookingDtoList = bookingServiceImpl.findAllOwnerBookings(2, "REJECTED", 0, 5);
+        assertEquals(bookingDtoList.size(), 0);
+        try {
+            bookingServiceImpl.findAllOwnerBookings(2, "REJ", 0, 5);
+            fail();
+        } catch (ValidationException thrown) {
+            assertTrue(true);
+        }
+
     }
 
 }

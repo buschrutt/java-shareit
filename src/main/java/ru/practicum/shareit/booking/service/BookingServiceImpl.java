@@ -167,14 +167,8 @@ public class BookingServiceImpl implements BookingService {
         } else {
             throw new NotFoundException("requestValidation: No Item Found--");
         }
-        if (request.getEnd() == null || request.getStart() == null) {
-            throw new ValidationException("requestValidation: Null--");
-        }
-        if (request.getEnd().isBefore(LocalDateTime.now()) || request.getStart().isBefore(LocalDateTime.now())) {
-            throw new ValidationException("re--questValidation: End or Start in a Past--");
-        }
-        if (request.getEnd().isBefore(request.getStart()) || request.getEnd().isEqual(request.getStart())) {
-            throw new ValidationException("request--Validation: End is Before or the Same as Start--");
+        if ((request.getEnd() == null || request.getStart() == null) || (request.getEnd().isBefore(LocalDateTime.now()) || request.getStart().isBefore(LocalDateTime.now())) || (request.getEnd().isBefore(request.getStart()) || request.getEnd().isEqual(request.getStart()))) {
+            throw new ValidationException("requestValidation: ValidationException--");
         }
     }
 }
