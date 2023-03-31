@@ -48,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
             }
             booking = bookingRepository.findById(bookingId).get();
         } else {
-            throw new NotFoundException("BookingApproval: --NotFoundException--");
+            throw new NotFoundException("BookingApproval: --No Booking Found-- bookingId: " + bookingId);
         }
         if (Objects.equals(booking.getStatus(), "APPROVED")) {
             throw new ValidationException("BookingApproval: --ValidationException--");
@@ -69,16 +69,16 @@ public class BookingServiceImpl implements BookingService {
         if (bookingRepository.findById(bookingId).isPresent()) {
             booking = bookingRepository.findById(bookingId).get();
         } else {
-            throw new NotFoundException("findBookingById: --NotFoundException--");
+            throw new NotFoundException("findBookingById: --No Booking Found-- bookingId: " + bookingId);
         }
         if (!Objects.equals(booking.getBooker(), userId) && !Objects.equals(itemRepository.findById(booking.getItemId()).get().getOwnerId(), userId)) {
-            throw new NotFoundException("findBookingById: --NotFoundException--");
+            throw new NotFoundException("findBookingById: --No User Found or not the Owner--");
         }
         return BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
     }
 
     @Override
-    public List<BookingDto> findAllUserBookings(Integer userId, String state, Integer from, Integer size) throws NotFoundException, ValidationException {
+    public List<BookingDto> findAllUserBookings(Integer userId, String state, Integer from, Integer size) throws ValidationException {
         List<BookingDto> bookingDtoList = new ArrayList<>();
         Pageable pageable = PageRequest.of(from / size, size);
         List<Booking> bookings = bookingRepository.findBookingsByBookerOrderByStartDesc(userId, pageable);

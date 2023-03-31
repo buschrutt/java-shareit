@@ -48,7 +48,7 @@ public class BookingController {
     @GetMapping
     public List<BookingDto> findAllUserBookings(@RequestHeader(value = sharerId, required = false) Integer userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) throws NotFoundException, ValidationException {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("findAllUserBookings: --NotFoundException--");
+            throw new NotFoundException("findAllUserBookings: --NotFoundException-- userId: " + userId);
         }
         if (size <= 0 || from < 0) {
             throw new ValidationException("findAllUserBookings: ValidationException--");

@@ -43,12 +43,12 @@ public class ItemServiceImpl implements ItemService {
         Item item = ItemDtoMapper.toItem(itemDto, ownerId);
         Item newItem;
         if (!userRepository.existsById(ownerId)) {
-            throw new NotFoundException("updateItem: No User Found--");
+            throw new NotFoundException("updateItem: No User Found-- ownerId: " + ownerId);
         }
         if (itemRepository.findById(itemId).isPresent()) {
             newItem = itemRepository.findById(itemId).get();
         } else {
-            throw new NotFoundException("updateItem: No Item Found--");
+            throw new NotFoundException("updateItem: No Item Found-- itemId: " + itemId);
         }
         if (item.getName() != null) {
             newItem.setName(item.getName());

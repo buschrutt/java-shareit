@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findById(userId).isPresent()) {
             newUser = userRepository.findById(userId).get();
         } else {
-            throw new NotFoundException("getUserById: No User Found--");
+            throw new NotFoundException("getUserById: No User Found-- userId: " + userId);
         }
         if (user.getEmail() != null && !Objects.equals(user.getEmail(), newUser.getEmail())) {
             emailValidation(user.getEmail());
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findById(userId).isPresent()) {
             return UserDtoMapper.toUserDto(userRepository.findById(userId).get());
         } else {
-            throw new NotFoundException("getUserById: No User Found--");
+            throw new NotFoundException("getUserById: No User Found-- userId: " + userId);
         }
     }
 
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.delete(userRepository.findById(userId).get());
         } else {
-            throw new NotFoundException("getUserById: No User Found--");
+            throw new NotFoundException("getUserById: No User Found-- userId: " + userId);
         }
     }
 

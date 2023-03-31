@@ -33,10 +33,10 @@ public class RequestController {
     @PostMapping
     public RequestDto addRequest(@RequestHeader(value = sharerId) Integer userId, @RequestBody RequestDto requestDto) throws ValidationException, NotFoundException {
         if (requestDto.getDescription() == null) {
-            throw new ValidationException("addRequest: ValidationException--");
+            throw new ValidationException("addRequest: ValidationException-- requestDto Description holds null ");
         }
         if (userRepository.findById(userId).isEmpty()) {
-            throw new NotFoundException("addRequest: NotFoundException--");
+            throw new NotFoundException("addRequest: NotFoundException-- userId: " + userId);
         }
         return requestService.addRequest(userId, requestDto);
     }
@@ -44,7 +44,7 @@ public class RequestController {
     @GetMapping
     public List<RequestDto> findUserRequests(@RequestHeader(value = sharerId) Integer userId) throws NotFoundException {
         if (userRepository.findById(userId).isEmpty()) {
-            throw new NotFoundException("findUserRequests: NotFoundException--");
+            throw new NotFoundException("findUserRequests: NotFoundException-- userId: " + userId);
         }
         return requestService.findUserRequests(userId);
     }
@@ -52,7 +52,7 @@ public class RequestController {
     @GetMapping("/all")
     public List<RequestDto> findAllRequests(@RequestHeader(value = sharerId) Integer userId, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) throws ValidationException {
         if (size == 0 || from < 0) {
-            throw new ValidationException("findAllRequests: ValidationException--");
+            throw new ValidationException("findAllRequests: ValidationException-- RequestParam has invalid size or from values");
         }
         return requestService.findAllRequests(from, size, userId);
     }
@@ -60,7 +60,7 @@ public class RequestController {
     @GetMapping("/{requestId}")
     public RequestDto findRequestById(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer requestId) throws NotFoundException {
         if (requestRepository.findById(requestId).isEmpty() || userRepository.findById(userId).isEmpty()) {
-            throw new NotFoundException("findRequestById: NotFoundException--");
+            throw new NotFoundException("findRequestById: NotFoundException-- User or Request isn't found, requestId: " + requestId + ", userId: " + userId);
         }
         return requestService.findRequestById(userId, requestId);
     }
