@@ -10,10 +10,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import ru.practicum.shareit.booking.dto.LastOrNextBookingDtoMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentDtoMapper;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
@@ -87,6 +89,13 @@ public class ItemServiceTests {
             .start(timeStart)
             .end(timeEnd)
             .booker(1)
+            .status("WAITING")
+            .build();
+    private final Booking bookingNext = Booking.builder()
+            .itemId(2)
+            .start(timeStart.plusDays(2))
+            .end(timeEnd.plusDays(2))
+            .booker(2)
             .status("WAITING")
             .build();
 
@@ -168,7 +177,12 @@ public class ItemServiceTests {
     @SneakyThrows
     void getItemByIdUnitTest() {
         List<Booking> bookingList = new ArrayList<>();
+        bookingList.add(booking);
+        bookingList.add(bookingNext);
         List<Comment> commentList = new ArrayList<>();
+        commentList.add(comment);
+        List<CommentDto> commentDtoList = new ArrayList<>();
+        commentDtoList.add(CommentDtoMapper.toCommentDto(comment, "John"));
         List<CommentDto> commentListDto = new ArrayList<>();
         when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
         when(bookingRepository.findBookingsByStatusAndItemIdOrderByStartDesc(any(), any())).thenReturn(bookingList);
@@ -177,6 +191,10 @@ public class ItemServiceTests {
         itemDto0.setOwnerId(2);
         itemDto.setId(1);
         itemDto.setComments(commentListDto);
+        assert user != null;
+        itemDto.setLastBooking(LastOrNextBookingDtoMapper.addBookingToDto(booking, user, item));
+        itemDto.setNextBooking(LastOrNextBookingDtoMapper.addBookingToDto(bookingNext, user, item));
+        itemDto.setComments(commentDtoList);
         assertEquals(itemDto0.toString(), itemDto.toString());
     }
 
