@@ -1,71 +1,83 @@
 package ru.practicum.shareit.user;
 
+import lombok.AccessLevel;
 import lombok.SneakyThrows;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import ru.practicum.shareit.error.NotFoundException;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserDtoMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@DataJpaTest
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 class UserServiceTests {
-
-    @Autowired
+    @Mock
     UserRepository userRepository;
-
-    User userOk = User.builder().email("user@mail.ru").name("User_Name").build();
-    User updatedUserOk = User.builder().email("user@mail.ru").name("UpdatedUser_Name").build();
-    UserDto userDtoOk = UserDto.builder().id(1).email("user@mail.ru").name("User_Name").build();
-    UserDto updatedUserDtoOk = UserDto.builder().id(1).email("user@mail.ru").name("UpdatedUser_Name").build();
+    @InjectMocks
+    UserServiceImpl userServiceImpl;
+    private final UserDto userDto = UserDto.builder()
+            .id(1)
+            .name("John")
+            .email("john.doe@mail.com")
+            .build();
+    private final User user = User.builder()
+            .id(1)
+            .name("John")
+            .email("john.doe@mail.com")
+            .build();
 
     @Test
     @SneakyThrows
     void addUserUnitTest() {
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        Mockito.when(mockUserRepository.save(Mockito.any())).thenReturn(User.builder().id(1).email("user@mail.ru").name("User_Name").build());
-        UserServiceImpl.emailValidation(userOk.getEmail());
-        assertEquals(UserDtoMapper.toUserDto(mockUserRepository.save(userOk)).toString(), userDtoOk.toString());
+        when(userRepository.save(any())).thenReturn(user);
+        assertEquals(userServiceImpl.addUser(userDto).toString(), userDto.toString());
     }
 
     @Test
     @SneakyThrows
     void updateUserUnitTest() {
-        UserRepository mockUserRepository = Mockito.mock(UserRepository.class);
-        Mockito.when(mockUserRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(updatedUserOk));
-        User newUser;
-        if (mockUserRepository.findById(1).isPresent()) {
-            newUser = mockUserRepository.findById(1).get();
-        } else {
-            throw new NotFoundException("getUserById: No User Found--");
-        }
-        if (newUser.getEmail() != null && !Objects.equals(userOk.getEmail(), newUser.getEmail())) {
-            UserServiceImpl.emailValidation(updatedUserOk.getEmail());
-            newUser.setEmail(updatedUserOk.getEmail());
-        }
-        if (updatedUserOk.getName() != null) {
-            newUser.setName(updatedUserOk.getName());
-        }
-        Mockito.when(mockUserRepository.save(Mockito.any())).thenReturn(User.builder().id(1).email("user@mail.ru").name("UpdatedUser_Name").build());
-        assertEquals(UserDtoMapper.toUserDto(mockUserRepository.save(newUser)).toString(), updatedUserDtoOk.toString());
+        when(userRepository.save(any())).thenReturn(user);
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+        assertEquals(userServiceImpl.updateUser(1, userDto).toString(), userDto.toString());
     }
 
     @Test
     @SneakyThrows
     void findAllUsersTest() {
-        userRepository.save(User.builder().name("firstUser").email("firstUser@ya.ru").build());
-        //userService.addUser(userOk);
-        //userService.addUser(updatedUserOk);
-        //userService.findAllUsers();
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        when(userRepository.findAll()).thenReturn(users);
+        assertEquals(userServiceImpl.findAllUsers().get(0).toString(), userDto.toString());
+    }
+
+    @Test
+    @SneakyThrows
+    void findUserByIdTest() {
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+        assertEquals(userServiceImpl.findUserById(1).toString(), userDto.toString());
+    }
+
+    @Test
+    @SneakyThrows
+    void deleteTest() {
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+        userServiceImpl.deleteUser(1);
     }
 
 }

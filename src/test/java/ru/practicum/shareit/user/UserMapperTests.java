@@ -10,10 +10,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UserMapperTests {
 
     @Test
-    void toUserDtoTest() {
+    void toUserDtoMapperTest() {
         User user = User.builder().id(1).email("user@mail.ru").name("user_Name").build();
         UserDto userDto = UserDto.builder().id(1).email("user@mail.ru").name("user_Name").build();
         assertEquals(UserDtoMapper.toUserDto(user).toString(), userDto.toString());
+    }
+
+    @Test
+    void toUserMapperTest() {
+        User user = User.builder().id(1).email("user@mail.ru").name("user_Name").build();
+        UserDto userDto = UserDto.builder().id(1).email("user@mail.ru").name("user_Name").build();
+        assertEquals(UserDtoMapper.toUser(userDto).toString(), user.toString());
     }
 
 }

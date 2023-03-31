@@ -1,9 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import org.junit.jupiter.api.Test;
-import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingDtoMapper;
-import ru.practicum.shareit.booking.dto.BookingRequestDto;
+import ru.practicum.shareit.booking.dto.*;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -67,5 +65,41 @@ public class BookingMapperTests {
                 .build();
         assertEquals(BookingDtoMapper.addBookingToDto(booking, user, item).toString(), bookingDto.toString());
     }
+
+    @Test
+    void lastOrNextBookingDtoTest() {
+        LocalDateTime timeStart = LocalDateTime.now();
+        LocalDateTime timeEnd = LocalDateTime.now();
+        Booking booking = Booking.builder()
+                .id(5)
+                .itemId(2)
+                .start(timeStart)
+                .end(timeEnd)
+                .status("WAITING")
+                .build();
+        Item item = Item.builder()
+                .id(1)
+                .name("Item_Name")
+                .description("Some_Item")
+                .available(true)
+                .requestId(3)
+                .build();
+        User user = User.builder()
+                .id(1)
+                .name("Some_User_Name")
+                .email("mail@mail.ru")
+                .build();
+        LastOrNextBookingDto bookingDto = LastOrNextBookingDto.builder()
+                .id(5)
+                .start(timeStart)
+                .end(timeEnd)
+                .item(item)
+                .bookerId(1)
+                .status("WAITING")
+                .build();
+        assertEquals(LastOrNextBookingDtoMapper.addBookingToDto(booking, user, item).toString(), bookingDto.toString());
+    }
+
+
 
 }

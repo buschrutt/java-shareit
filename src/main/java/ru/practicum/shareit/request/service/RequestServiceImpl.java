@@ -77,4 +77,7 @@ public class RequestServiceImpl implements RequestService {
         List<Item> items = itemRepository.findItemsByRequestIdOrderById(request.getId());
         return RequestDtoMapper.addRequestToDto(request, items);
     }
+
+    // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
+
 }

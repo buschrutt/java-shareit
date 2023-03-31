@@ -73,6 +73,7 @@ public class ItemServiceImpl implements ItemService {
             }
             List<Comment> comments = commentRepository.findCommentsByItemOrderByCreatedDesc(item.getId());
             itemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentDtos(item, convertCommentsToDto(comments), findLastOrNextBooking(itemBookings, true), findLastOrNextBooking(itemBookings, false)));
+            //itemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentDtos(item, convertCommentsToDto(comments), findLastOrNextBooking(itemBookings, true), findLastOrNextBooking(itemBookings, false)));
         }
         return itemDtoList;
     }

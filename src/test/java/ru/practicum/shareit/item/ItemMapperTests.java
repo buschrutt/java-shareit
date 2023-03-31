@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ItemMapperTests {
 
     @Test
-    void toItemDtoTest() {
+    void toItemDtoMapperTest() {
         Item item = Item.builder()
                 .id(1)
                 .name("Item_Name")
@@ -37,7 +37,7 @@ public class ItemMapperTests {
     }
 
     @Test
-    void toItemWithBookingsAndCommentDtosTest() {
+    void toItemWithBookingsAndCommentDtosMapperTest() {
         LocalDateTime timeNow = LocalDateTime.now();
         LocalDateTime timeStart = LocalDateTime.now();
         LocalDateTime timeEnd = LocalDateTime.now();
@@ -87,7 +87,29 @@ public class ItemMapperTests {
     }
 
     @Test
-    void toCommentDtoTest() {
+    void toItemMapperTest() {
+        Item item = Item.builder()
+                .id(1)
+                .name("Item_Name")
+                .description("Some_Item")
+                .available(true)
+                .requestId(3)
+                .ownerId(5)
+                .build();
+        ItemDto itemDto = ItemDto.builder()
+                .id(1)
+                .name("Item_Name")
+                .description("Some_Item")
+                .available(true)
+                .requestId(3)
+                .build();
+        Item item0 = ItemDtoMapper.toItem(itemDto, 5);
+        item0.setId(1);
+        assertEquals(item0.toString(), item.toString());
+    }
+
+    @Test
+    void toCommentDtoMapperTest() {
         LocalDateTime timeNow = LocalDateTime.now();
         CommentDto commentDto = CommentDto.builder()
                 .id(1)
@@ -104,6 +126,28 @@ public class ItemMapperTests {
                 .created(timeNow)
                 .build();
         assertEquals(CommentDtoMapper.toCommentDto(comment, "Author").toString(), commentDto.toString());
+    }
+
+    @Test
+    void toCommentMapperTest() {
+        LocalDateTime timeNow = LocalDateTime.now();
+        CommentDto commentDto = CommentDto.builder()
+                .id(1)
+                .text("Some_text")
+                .item(2)
+                .authorName("Author")
+                .created(timeNow)
+                .build();
+        Comment comment = Comment.builder()
+                .id(1)
+                .text("Some_text")
+                .item(2)
+                .authorName(9)
+                .created(timeNow)
+                .build();
+        Comment comment0 = CommentDtoMapper.toComment(commentDto, comment.getAuthorName());
+        comment0.setId(1);
+        assertEquals(comment0.toString(), comment.toString());
     }
 
 }
