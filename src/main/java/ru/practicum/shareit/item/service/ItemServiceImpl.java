@@ -32,22 +32,23 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
 
     @Override
-    public ItemDto addItem(Item item, Integer ownerId) throws ValidationException, NotFoundException {
-        item.setOwnerId(ownerId);
+    public ItemDto addItem(ItemDto itemDto, Integer ownerId) throws ValidationException, NotFoundException {
+        Item item = ItemDtoMapper.toItem(itemDto, ownerId);
         itemValidation(item);
         return ItemDtoMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
-    public ItemDto updateItem(Integer itemId, Item item, Integer ownerId) throws NotFoundException {
+    public ItemDto updateItem(Integer itemId, ItemDto itemDto, Integer ownerId) throws NotFoundException {
+        Item item = ItemDtoMapper.toItem(itemDto, ownerId);
         Item newItem;
         if (!userRepository.existsById(ownerId)) {
-            throw new NotFoundException("updateItem: No User Found--");
+            throw new NotFoundException("updateItem: No User Found-- ownerId: " + ownerId);
         }
         if (itemRepository.findById(itemId).isPresent()) {
             newItem = itemRepository.findById(itemId).get();
         } else {
-            throw new NotFoundException("updateItem: No Item Found--");
+            throw new NotFoundException("updateItem: No Item Found-- itemId: " + itemId);
         }
         if (item.getName() != null) {
             newItem.setName(item.getName());
@@ -72,6 +73,7 @@ public class ItemServiceImpl implements ItemService {
             }
             List<Comment> comments = commentRepository.findCommentsByItemOrderByCreatedDesc(item.getId());
             itemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentDtos(item, convertCommentsToDto(comments), findLastOrNextBooking(itemBookings, true), findLastOrNextBooking(itemBookings, false)));
+            //itemDtoList.add(ItemDtoMapper.toItemWithBookingsAndCommentDtos(item, convertCommentsToDto(comments), findLastOrNextBooking(itemBookings, true), findLastOrNextBooking(itemBookings, false)));
         }
         return itemDtoList;
     }
@@ -108,12 +110,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentDto addComment(Comment comment, Integer userId, Integer itemId) throws ValidationException {
+    public CommentDto addComment(CommentDto commentDto, Integer userId, Integer itemId) throws ValidationException {
+        Comment comment = CommentDtoMapper.toComment(commentDto, userId);
         commentValidation(comment, userId, itemId);
         comment.setAuthorName(userId);
         comment.setItem(itemId);
         comment.setCreated(LocalDateTime.now());
-        return CommentDtoMapper.toCommentDto(commentRepository.save(comment), userRepository);
+        return CommentDtoMapper.toCommentDto(commentRepository.save(comment), userRepository.findById(comment.getAuthorName()).get().getName());
     }
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
@@ -138,7 +141,7 @@ public class ItemServiceImpl implements ItemService {
     private List<CommentDto> convertCommentsToDto(List<Comment> comments) {
         List<CommentDto> itemCommentDtos = new ArrayList<>();
         for (Comment comment : comments) {
-            itemCommentDtos.add(CommentDtoMapper.toCommentDto(comment, userRepository));
+            itemCommentDtos.add(CommentDtoMapper.toCommentDto(comment, userRepository.findById(comment.getAuthorName()).get().getName()));
         }
         return itemCommentDtos;
     }

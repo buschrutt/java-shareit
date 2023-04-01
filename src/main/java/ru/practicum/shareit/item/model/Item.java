@@ -1,8 +1,6 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.PackagePrivate;
 
 import javax.persistence.*;
@@ -12,11 +10,14 @@ import javax.persistence.*;
  */
 
 @Entity
+@Builder
 @Table(name = "items")
 @Getter
 @Setter
 @ToString
 @PackagePrivate
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,5 +36,5 @@ public class Item {
     Integer ownerId;
 
     @Column(name = "request_id")
-    Integer request; // if was created by user request - holds the link to that request
+    Integer requestId; // if was created by user request - holds the link to that request
 }

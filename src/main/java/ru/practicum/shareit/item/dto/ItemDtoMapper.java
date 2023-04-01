@@ -14,20 +14,32 @@ public class ItemDtoMapper {
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
-                .isAvailable(item.getAvailable())
+                .available(item.getAvailable())
+                .requestId(item.getRequestId())
                 .build();
     }
 
     public static ItemDto toItemWithBookingsAndCommentDtos(Item item, List<CommentDto> itemComments, LastOrNextBookingDto nextBookingDto, LastOrNextBookingDto lastBookingDto) {
-        ItemDto itemDto = ItemDto.builder()
+        return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
-                .isAvailable(item.getAvailable())
+                .available(item.getAvailable())
                 .lastBooking(lastBookingDto)
                 .nextBooking(nextBookingDto)
+                .comments(itemComments)
+                .requestId(item.getRequestId())
                 .build();
-        itemDto.setComments(itemComments);
-        return itemDto;
     }
+
+    public static Item toItem(ItemDto itemDto, Integer ownerId) {
+        return Item.builder()
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .requestId(itemDto.getRequestId())
+                .ownerId(ownerId)
+                .build();
+    }
+
 }

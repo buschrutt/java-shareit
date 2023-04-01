@@ -1,17 +1,15 @@
 package ru.practicum.shareit.user.service;
 
-import ru.practicum.shareit.error.ConflictException;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
 
 public interface UserService {
-    UserDto addUser(User user) throws ValidationException, ConflictException;
+    UserDto addUser(UserDto userDto) throws ValidationException;
 
-    UserDto updateUser(int userId, User user) throws ValidationException, ConflictException, NotFoundException;
+    UserDto updateUser(Integer userId, UserDto userDto) throws ValidationException, NotFoundException;
 
     List<UserDto> findAllUsers();
 

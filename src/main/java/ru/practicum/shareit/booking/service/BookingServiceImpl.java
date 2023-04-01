@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoMapper;
@@ -46,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
             }
             booking = bookingRepository.findById(bookingId).get();
         } else {
-            throw new NotFoundException("BookingApproval: --NotFoundException--");
+            throw new NotFoundException("BookingApproval: --No Booking Found-- bookingId: " + bookingId);
         }
         if (Objects.equals(booking.getStatus(), "APPROVED")) {
             throw new ValidationException("BookingApproval: --ValidationException--");
@@ -67,21 +69,19 @@ public class BookingServiceImpl implements BookingService {
         if (bookingRepository.findById(bookingId).isPresent()) {
             booking = bookingRepository.findById(bookingId).get();
         } else {
-            throw new NotFoundException("findBookingById: --NotFoundException--");
+            throw new NotFoundException("findBookingById: --No Booking Found-- bookingId: " + bookingId);
         }
         if (!Objects.equals(booking.getBooker(), userId) && !Objects.equals(itemRepository.findById(booking.getItemId()).get().getOwnerId(), userId)) {
-            throw new NotFoundException("findBookingById: --NotFoundException--");
+            throw new NotFoundException("findBookingById: --No User Found or not the Owner--");
         }
         return BookingDtoMapper.addBookingToDto(booking, userRepository.findById(booking.getBooker()).get(), itemRepository.findById(booking.getItemId()).get());
     }
 
     @Override
-    public List<BookingDto> findAllUserBookings(Integer userId, String state, Integer from, Integer size) throws NotFoundException, ValidationException {
-        if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("findAllUserBookings: --NotFoundException--");
-        }
+    public List<BookingDto> findAllUserBookings(Integer userId, String state, Integer from, Integer size) throws ValidationException {
         List<BookingDto> bookingDtoList = new ArrayList<>();
-        List<Booking> bookings = bookingRepository.findBookingsByBookerOrderByStartDesc(userId);
+        Pageable pageable = PageRequest.of(from / size, size);
+        List<Booking> bookings = bookingRepository.findBookingsByBookerOrderByStartDesc(userId, pageable);
         for (Booking booking : bookings) {
             bookingDtoAdding(state, bookingDtoList, booking);
         }
@@ -89,17 +89,15 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> findAllOwnerBookings(Integer ownerId, String state, Integer from, Integer size) throws NotFoundException, ValidationException {
-        if (!userRepository.existsById(ownerId)) {
-            throw new NotFoundException("findAllUserBookings: No User Found--");
-        }
+    public List<BookingDto> findAllOwnerBookings(Integer ownerId, String state, Integer from, Integer size) throws ValidationException {
         List<BookingDto> bookingDtoList = new ArrayList<>();
         List<Integer> itemIds = new ArrayList<>();
         List<Item> items = itemRepository.findItemsByOwnerId(ownerId);
         for (Item item : items) {
             itemIds.add(item.getId());
         }
-        List<Booking> bookings = bookingRepository.findBookingsByItemIdInOrderByStartDesc(itemIds);
+        Pageable pageable = PageRequest.of(from / size, size);
+        List<Booking> bookings = bookingRepository.findBookingsByItemIdInOrderByStartDesc(itemIds, pageable);
         for (Booking booking : bookings) {
             bookingDtoAdding(state, bookingDtoList, booking);
         }
@@ -157,14 +155,8 @@ public class BookingServiceImpl implements BookingService {
         } else {
             throw new NotFoundException("requestValidation: No Item Found--");
         }
-        if (request.getEnd() == null || request.getStart() == null) {
-            throw new ValidationException("requestValidation: Null--");
-        }
-        if (request.getEnd().isBefore(LocalDateTime.now()) || request.getStart().isBefore(LocalDateTime.now())) {
-            throw new ValidationException("requestValidation: End or Start in a Past--");
-        }
-        if (request.getEnd().isBefore(request.getStart()) || request.getEnd().isEqual(request.getStart())) {
-            throw new ValidationException("requestValidation: End is Before or the Same as Start--");
+        if ((request.getEnd() == null || request.getStart() == null) || (request.getEnd().isBefore(LocalDateTime.now()) || request.getStart().isBefore(LocalDateTime.now())) || (request.getEnd().isBefore(request.getStart()) || request.getEnd().isEqual(request.getStart()))) {
+            throw new ValidationException("requestValidation: ValidationException--");
         }
     }
 }

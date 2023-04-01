@@ -2,19 +2,26 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.item.model.Comment;
-import ru.practicum.shareit.user.repository.UserRepository;
-
 
 @RequiredArgsConstructor
 public class CommentDtoMapper {
 
-    public static CommentDto toCommentDto(Comment comment, UserRepository userRepository) {
+    public static CommentDto toCommentDto(Comment comment, String authorName) {
         return CommentDto.builder()
                 .id(comment.getId())
                 .text(comment.getText())
                 .item(comment.getItem())
-                .authorName(userRepository.findById(comment.getAuthorName()).get().getName())
+                .authorName(authorName)
                 .created(comment.getCreated())
+                .build();
+    }
+
+    public static Comment toComment(CommentDto commentDto, Integer authorId) {
+        return Comment.builder()
+                .text(commentDto.getText())
+                .item(commentDto.getItem())
+                .authorName(authorId)
+                .created(commentDto.getCreated())
                 .build();
     }
 

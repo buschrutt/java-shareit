@@ -4,8 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.error.NotFoundException;
 import ru.practicum.shareit.error.ValidationException;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserServiceImpl;
+import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 
@@ -16,21 +15,21 @@ import java.util.List;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    final UserServiceImpl userService;
+    final UserService userService;
     final String epUserId = "/{userId}";
 
-    public UserController(UserServiceImpl userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping
-    public UserDto addUser(@RequestBody User user) throws ValidationException {
-        return userService.addUser(user);
+    public UserDto addUser(@RequestBody UserDto userDto) throws ValidationException {
+        return userService.addUser(userDto);
     }
 
     @PatchMapping(epUserId)
-    public UserDto updateUser(@PathVariable int userId, @RequestBody User user) throws ValidationException, NotFoundException {
-        return userService.updateUser(userId, user);
+    public UserDto updateUser(@PathVariable Integer userId, @RequestBody UserDto userDto) throws ValidationException, NotFoundException {
+        return userService.updateUser(userId, userDto);
     }
 
     @GetMapping

@@ -17,18 +17,20 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDto addUser(User user) throws ValidationException {
+    public UserDto addUser(UserDto userDto) throws ValidationException {
+        User user = UserDtoMapper.toUser(userDto);
         emailValidation(user.getEmail());
         return UserDtoMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
-    public UserDto updateUser(int userId, User user) throws ValidationException, NotFoundException {
+    public UserDto updateUser(Integer userId, UserDto userDto) throws ValidationException, NotFoundException {
+        User user = UserDtoMapper.toUser(userDto);
         User newUser;
         if (userRepository.findById(userId).isPresent()) {
             newUser = userRepository.findById(userId).get();
         } else {
-            throw new NotFoundException("getUserById: No User Found--");
+            throw new NotFoundException("getUserById: No User Found-- userId: " + userId);
         }
         if (user.getEmail() != null && !Objects.equals(user.getEmail(), newUser.getEmail())) {
             emailValidation(user.getEmail());
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findById(userId).isPresent()) {
             return UserDtoMapper.toUserDto(userRepository.findById(userId).get());
         } else {
-            throw new NotFoundException("getUserById: No User Found--");
+            throw new NotFoundException("getUserById: No User Found-- userId: " + userId);
         }
     }
 
@@ -64,13 +66,13 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.delete(userRepository.findById(userId).get());
         } else {
-            throw new NotFoundException("getUserById: No User Found--");
+            throw new NotFoundException("getUserById: No User Found-- userId: " + userId);
         }
     }
 
     // %%%%%%%%%% %%%%%%%%%% supporting methods %%%%%%%%%% %%%%%%%%%%
 
-    private void emailValidation(String email) throws ValidationException {
+    public static void emailValidation(String email) throws ValidationException {
         if (email == null) {
             throw new ValidationException("userValidation: Email Is Empty--");
         }
