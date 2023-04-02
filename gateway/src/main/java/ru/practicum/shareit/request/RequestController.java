@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.error.ValidationException;
+import ru.practicum.shareit.error.ExceptionBadRequest;
 import ru.practicum.shareit.request.dto.RequestDto;
 
 import static ru.practicum.shareit.Constants.HEADER;
@@ -22,12 +22,10 @@ public class RequestController {
 
     @PostMapping
     public ResponseEntity<Object> addRequest(@RequestHeader(value = HEADER) Integer userId,
-                                             @RequestBody RequestDto requestDto) throws ValidationException {
+                                             @RequestBody RequestDto requestDto) throws ExceptionBadRequest {
+
         if (requestDto.getDescription() == null) {
-            throw new ValidationException("addRequest: ValidationException-- requestDto Description holds null ");
-        }
-        if (requestDto.getDescription().isEmpty()) {
-            throw new ValidationException("addRequest: Description isEmpty");
+            throw new ExceptionBadRequest("addRequest: ValidationException-- requestDto Description holds null ");
         }
         return requestClient.addRequest(userId, requestDto);
     }
@@ -41,10 +39,10 @@ public class RequestController {
     @GetMapping("/all")
     public ResponseEntity<Object> findAllRequests(@RequestHeader(value = HEADER) Long userId,
                                             @RequestParam(defaultValue = "0") Integer from,
-                                            @RequestParam(defaultValue = "10") Integer size) throws ValidationException {
+                                            @RequestParam(defaultValue = "10") Integer size) throws ExceptionBadRequest {
 
         if (size == 0 || from < 0) {
-            throw new ValidationException("findAllRequests: ValidationException-- RequestParam has invalid size or from values");
+            throw new ExceptionBadRequest("findAllRequests: ValidationException-- RequestParam has invalid size or from values");
         }
         return requestClient.findAllRequests(from, size, userId);
     }

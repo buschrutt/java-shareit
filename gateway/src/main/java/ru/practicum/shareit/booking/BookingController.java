@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
-import ru.practicum.shareit.error.ValidationException;
+import ru.practicum.shareit.error.ExceptionBadRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -30,9 +30,9 @@ public class BookingController {
 	public ResponseEntity<Object> getBookings(@RequestHeader(HEADER) long userId,
 			@RequestParam(name = "state", defaultValue = "all") String stateParam,
 			@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-			@Positive @RequestParam(name = "size", defaultValue = "10") Integer size) throws ValidationException {
+			@Positive @RequestParam(name = "size", defaultValue = "10") Integer size) throws ExceptionBadRequest {
 		BookingState state = BookingState.from(stateParam)
-				.orElseThrow(() -> new ValidationException("Unknown state: " + stateParam));
+				.orElseThrow(() -> new ExceptionBadRequest("Unknown state: " + stateParam));
 		log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
 		return bookingClient.getBookings(userId, state, from, size);
 	}
@@ -64,10 +64,10 @@ public class BookingController {
 	public ResponseEntity<Object> findAllOwnerBookings(@RequestHeader(value = HEADER, required = false) long userId,
 													   @RequestParam(name = "state", defaultValue = "all") String stateParam,
 													   @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-													   @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) throws ValidationException {
+													   @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) throws ExceptionBadRequest {
 
 		BookingState state = BookingState.from(stateParam)
-				.orElseThrow(() -> new ValidationException("Unknown state: " + stateParam));
+				.orElseThrow(() -> new ExceptionBadRequest("Unknown state: " + stateParam));
 		return bookingClient.findAllOwnerBookings(userId, state, from, size);
 	}
 
