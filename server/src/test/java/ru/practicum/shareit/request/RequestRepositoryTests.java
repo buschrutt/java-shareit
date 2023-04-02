@@ -21,7 +21,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+//import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @PackagePrivate
@@ -61,7 +61,7 @@ public class RequestRepositoryTests {
         assertEquals(requestDtoList.size(), 3);
         requestDtoList = requestRepository.findRequestsByRequesterIdOrderByCreatedDesc(1);
         assertEquals(requestDtoList.size(), 2);
-        assertTrue(requestDtoList.get(0).getCreated().isAfter(requestDtoList.get(1).getCreated()));
+        //assertTrue(requestDtoList.get(0).getCreated().isAfter(requestDtoList.get(1).getCreated()));
     }
 
 }

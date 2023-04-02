@@ -25,6 +25,7 @@ public class RequestController {
     final String sharerId = "X-Sharer-User-Id";
 
     public RequestController(RequestService requestService, UserRepository userRepository, RequestRepository requestRepository) {
+
         this.requestService = requestService;
         this.userRepository = userRepository;
         this.requestRepository = requestRepository;
@@ -32,9 +33,7 @@ public class RequestController {
 
     @PostMapping
     public RequestDto addRequest(@RequestHeader(value = sharerId) Integer userId, @RequestBody RequestDto requestDto) throws ValidationException, NotFoundException {
-        if (requestDto.getDescription() == null) {
-            throw new ValidationException("addRequest: ValidationException-- requestDto Description holds null ");
-        }
+
         if (userRepository.findById(userId).isEmpty()) {
             throw new NotFoundException("addRequest: NotFoundException-- userId: " + userId);
         }
@@ -43,6 +42,7 @@ public class RequestController {
 
     @GetMapping
     public List<RequestDto> findUserRequests(@RequestHeader(value = sharerId) Integer userId) throws NotFoundException {
+
         if (userRepository.findById(userId).isEmpty()) {
             throw new NotFoundException("findUserRequests: NotFoundException-- userId: " + userId);
         }
@@ -51,9 +51,7 @@ public class RequestController {
 
     @GetMapping("/all")
     public List<RequestDto> findAllRequests(@RequestHeader(value = sharerId) Integer userId, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) throws ValidationException {
-        if (userId == 4) {
-            int a = 2;
-        }
+
         if (size == 0 || from < 0) {
             throw new ValidationException("findAllRequests: ValidationException-- RequestParam has invalid size or from values");
         }
@@ -62,6 +60,7 @@ public class RequestController {
 
     @GetMapping("/{requestId}")
     public RequestDto findRequestById(@RequestHeader(value = sharerId) Integer userId, @PathVariable Integer requestId) throws NotFoundException {
+
         if (requestRepository.findById(requestId).isEmpty() || userRepository.findById(userId).isEmpty()) {
             throw new NotFoundException("findRequestById: NotFoundException-- User or Request isn't found, requestId: " + requestId + ", userId: " + userId);
         }
