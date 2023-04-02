@@ -62,6 +62,7 @@ public class BaseClient {
         return makeAndSendRequest(HttpMethod.PUT, path, userId, parameters, body);
     }
 
+    // here !
     protected <T> ResponseEntity<Object> patch(String path, T body) {
 
         return patch(path, null, null, body);
