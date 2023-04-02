@@ -220,5 +220,4 @@ public class ItemServiceTests {
         when(bookingRepository.findBookingsByStatusAndBookerAndItemIdOrderByStartDesc(any(), any(), any())).thenReturn(bookingList);
         assertEquals(itemServiceImpl.addComment(commentDto, 1, 1).toString(), commentDto.toString());
     }
-
 }

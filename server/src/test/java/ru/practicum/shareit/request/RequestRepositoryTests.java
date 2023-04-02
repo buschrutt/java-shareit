@@ -59,11 +59,9 @@ public class RequestRepositoryTests {
         Pageable pageable = PageRequest.of(0, 3);
         List<Request> requestDtoList = requestRepository.findRequestsByRequesterIdIsNotOrderByCreatedDesc(2, pageable);
         assertEquals(requestDtoList.size(), 3);
-        //assertTrue(requestDtoList.get(0).getCreated().isAfter(requestDtoList.get(1).getCreated()));
         requestDtoList = requestRepository.findRequestsByRequesterIdOrderByCreatedDesc(1);
         assertEquals(requestDtoList.size(), 2);
         assertTrue(requestDtoList.get(0).getCreated().isAfter(requestDtoList.get(1).getCreated()));
     }
-
 
 }
