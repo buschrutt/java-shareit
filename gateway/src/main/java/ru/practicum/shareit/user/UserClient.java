@@ -34,7 +34,7 @@ public class UserClient extends BaseClient {
         return get("/" + userId);
     }
 
-    public ResponseEntity<Object> addUser (UserDto userDto) {
+    public ResponseEntity<Object> addUser(UserDto userDto) {
 
         return post("", userDto);
     }

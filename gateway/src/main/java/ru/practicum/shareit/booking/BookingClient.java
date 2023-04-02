@@ -57,9 +57,6 @@ public class BookingClient extends BaseClient {
     @GetMapping("/owner")
     public ResponseEntity<Object> findAllOwnerBookings(long userId, BookingState state, Integer from, Integer size) {
 
-        if (state.name() == "ALL") {
-            int a= 2;
-        }
         Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "from", from,
