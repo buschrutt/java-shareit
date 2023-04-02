@@ -51,6 +51,9 @@ public class RequestController {
 
     @GetMapping("/all")
     public List<RequestDto> findAllRequests(@RequestHeader(value = sharerId) Integer userId, @RequestParam(defaultValue = "0") Integer from, @RequestParam(defaultValue = "10") Integer size) throws ValidationException {
+        if (userId == 4) {
+            int a = 2;
+        }
         if (size == 0 || from < 0) {
             throw new ValidationException("findAllRequests: ValidationException-- RequestParam has invalid size or from values");
         }

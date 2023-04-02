@@ -6,6 +6,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
@@ -43,5 +44,27 @@ public class BookingClient extends BaseClient {
     public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
 
         return get("/" + bookingId, userId);
+    }
+
+    public ResponseEntity<Object> bookingApproval(Long userId, Integer bookingId, Boolean approved) {
+
+        Map<String, Object> parameters = Map.of(
+                "approved", approved
+        );
+        return patch("/" + bookingId + "?approved={approved}", userId, parameters, null);
+    }
+
+    @GetMapping("/owner")
+    public ResponseEntity<Object> findAllOwnerBookings(long userId, BookingState state, Integer from, Integer size) {
+
+        if (state.name() == "ALL") {
+            int a= 2;
+        }
+        Map<String, Object> parameters = Map.of(
+                "state", state.name(),
+                "from", from,
+                "size", size
+        );
+        return get("/owner?state={state}&from={from}&size={size}", userId, parameters);
     }
 }
