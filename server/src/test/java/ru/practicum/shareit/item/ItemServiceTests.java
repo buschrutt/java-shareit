@@ -162,7 +162,7 @@ public class ItemServiceTests {
         List<CommentDto> commentListDto = new ArrayList<>();
         //commentList.add(comment);
         when(itemRepository.findById(any())).thenReturn(Optional.ofNullable(item));
-        when(itemRepository.findItemsByOwnerId(any())).thenReturn(itemList);
+        when(itemRepository.findItemsByOwnerIdOrderById(any())).thenReturn(itemList);
         when(bookingRepository.findBookingsByStatusAndItemIdOrderByStartDesc(any(), any())).thenReturn(bookingList);
         when(commentRepository.findCommentsByItemOrderByCreatedDesc(any())).thenReturn(commentList);
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));

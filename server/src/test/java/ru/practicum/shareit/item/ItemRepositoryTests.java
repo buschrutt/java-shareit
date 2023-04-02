@@ -50,7 +50,7 @@ public class ItemRepositoryTests {
     @Test
     void itemRepositoryFindByOwnerTest() {
         List<Item> items = itemRepository.findAll();
-        List<Item> itemsByOwner = itemRepository.findItemsByOwnerId(items.get(0).getOwnerId());
+        List<Item> itemsByOwner = itemRepository.findItemsByOwnerIdOrderById(items.get(0).getOwnerId());
         assertEquals(itemsByOwner.size(), 2);
     }
 

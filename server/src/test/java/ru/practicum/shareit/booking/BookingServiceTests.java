@@ -157,7 +157,7 @@ public class BookingServiceTests {
         when(userRepository.existsById(any())).thenReturn(true);
         List<Item> itemList = new ArrayList<>();
         itemList.add(item);
-        when(itemRepository.findItemsByOwnerId(any())).thenReturn(itemList);
+        when(itemRepository.findItemsByOwnerIdOrderById(any())).thenReturn(itemList);
         List<Booking> bookingList = new ArrayList<>();
         bookingList.add(booking);
         when(bookingRepository.findBookingsByItemIdInOrderByStartDesc(any(), any())).thenReturn(bookingList);
