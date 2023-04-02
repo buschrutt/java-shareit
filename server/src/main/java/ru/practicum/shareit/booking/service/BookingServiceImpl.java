@@ -92,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> findAllOwnerBookings(Integer ownerId, String state, Integer from, Integer size) throws ValidationException {
         List<BookingDto> bookingDtoList = new ArrayList<>();
         List<Integer> itemIds = new ArrayList<>();
-        List<Item> items = itemRepository.findItemsByOwnerId(ownerId);
+        List<Item> items = itemRepository.findItemsByOwnerIdOrderById(ownerId);
         for (Item item : items) {
             itemIds.add(item.getId());
         }
